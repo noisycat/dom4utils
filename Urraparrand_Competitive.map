@@ -1,0 +1,933 @@
+-- 
+-- Map file for Dominions 4
+-- 
+-- Illwinter Game Design
+-- www.illwinter.com
+-- 
+
+-- Title and image file
+#dom2title Urraparrand
+#imagefile urraparrand.tga
+#domversion 350
+#wraparound
+#maptextcol 0.10 0.15 0.10 1.00
+#description "The worlds break down, and with them the laws of men and nature; mud seeps into the cracks of Creation and drips into some new place between the Heavens and Hells. A strange geography is wrought, confusing sage and sailor alike. And even this new land is but another flimsy stage, upon which the Pretenders will reenact their timeless theater of power and cruelty.
+
+Recommended for 10-14 players where any number are underwater nations.
+Modified Start Locations and Permanent Throne Locations"
+
+-- Province names/terrains
+#landname 1 "Misty Murk"
+#terrain 1 552
+#landname 2 "Eklos"
+#terrain 2 832
+#landname 3 "Twin Hill"
+#terrain 3 776
+#landname 4 "Marklin Downs"
+#terrain 4 280
+#landname 5 "Rimtooth Pass"
+#terrain 5 16
+#landname 6 "Trollhome"
+#terrain 6 4114
+#landname 7 "Plateau of Relent"
+#terrain 7 576
+#landname 8 "Morassia"
+#terrain 8 4194440
+#landname 9 "Desert's Edge"
+#terrain 9 8
+#landname 10 "Ulanth"
+#terrain 10 0
+#landname 11 "Blood Mountain"
+#terrain 11 16
+#landname 12 "Wastewatch"
+#terrain 12 2
+#landname 13 "Damaras"
+#terrain 13 4194568
+#landname 14 "Fortune's Water"
+#terrain 14 4
+#landname 15 "Ogre's Pocket"
+#terrain 15 16
+#landname 16 "Gornak Point"
+#terrain 16 528
+#landname 17 "Shale"
+#terrain 17 408
+#landname 18 "Woodwall"
+#terrain 18 4194441
+#landname 19 "Deerhome"
+#terrain 19 649
+#landname 20 "Bonedust Rise"
+#terrain 20 592
+#landname 21 "The Great Wood"
+#terrain 21 136
+#landname 22 "West High Desert"
+#terrain 22 578
+#landname 23 "Ivory Keep"
+#terrain 23 37748738
+#landname 24 "The Sweep"
+#terrain 24 280
+#landname 25 "Wight Mountains"
+#terrain 25 408
+#landname 26 "Hand of the High Father"
+#terrain 26 768
+#landname 27 "East High Desert"
+#terrain 27 578
+#landname 28 "Ferrisol"
+#terrain 28 4194696
+#landname 29 "Good Land"
+#terrain 29 392
+#landname 30 "Dyrfall"
+#terrain 30 4195080
+#landname 31 "East King's Cut"
+#terrain 31 517
+#landname 32 "Hidden Forest"
+#terrain 32 37748872
+#landname 33 "West King's Cut"
+#terrain 33 16777733
+#landname 34 "Suthok Pass"
+#terrain 34 153
+#landname 35 "Krator"
+#terrain 35 4194816
+#landname 36 "Dell of Dawn"
+#terrain 36 256
+#landname 37 "Firgal Forest"
+#terrain 37 4194696
+#landname 38 "River of Lost Love"
+#terrain 38 4195080
+#landname 39 "Graybeard Peaks"
+#terrain 39 37748736
+#landname 40 "Garnet Climb"
+#terrain 40 792
+#landname 41 "Harrowood"
+#terrain 41 4195208
+#landname 42 "Caelin's Copse"
+#terrain 42 904
+#landname 43 "Pilgrim's Rest"
+#terrain 43 256
+#landname 44 "Garras River"
+#terrain 44 264
+#landname 45 "Ruins of Gol Suthok"
+#terrain 45 528
+#landname 46 "Garrasea"
+#terrain 46 4
+#landname 47 "Grave of the Serpents"
+#terrain 47 4
+#landname 48 "The Onyx Citadel"
+#terrain 48 4196104
+#landname 49 "Source of the Garras"
+#terrain 49 792
+#landname 50 "Ravenna"
+#terrain 50 20972288
+#landname 51 "Druid's Home"
+#terrain 51 4194432
+#landname 52 "Low Suthok"
+#terrain 52 0
+#landname 53 "Bannerwood"
+#terrain 53 4194952
+#landname 54 "Ancient Henge"
+#terrain 54 20972424
+#landname 55 "South Urrap Ocean"
+#terrain 55 4
+#landname 56 "Caelinwood"
+#terrain 56 648
+#landname 57 "Witch Watch"
+#terrain 57 512
+#landname 58 "Aramos Sound"
+#terrain 58 516
+#landname 59 "Black Marsh"
+#terrain 59 553
+#landname 60 "Coral Crest"
+#terrain 60 4
+#landname 61 "Forest of Mouths"
+#terrain 61 4194440
+#landname 62 "Coven Downs"
+#terrain 62 18
+#landname 63 "Longshank"
+#terrain 63 37749128
+#landname 64 "Bitter Pass"
+#terrain 64 665
+#landname 65 "Thorrin"
+#terrain 65 768
+#landname 66 "Rockwater"
+#terrain 66 552
+#landname 67 "Prophet's Divide"
+#terrain 67 568
+#landname 68 "The Broadwater"
+#terrain 68 33554436
+#landname 69 "Phallor"
+#terrain 69 512
+#landname 70 "The Summer Fastness"
+#terrain 70 264
+#landname 71 "Lake Foggypock"
+#terrain 71 16777733
+#landname 72 "Mouth of the Aramos"
+#terrain 72 264
+#landname 73 "Dymryl Wood"
+#terrain 73 152
+#landname 74 "Turtle Mountain"
+#terrain 74 4194816
+#landname 75 "Mount Iagon"
+#terrain 75 16
+#landname 76 "The Shallows"
+#terrain 76 516
+#landname 77 "Sunrise Ridge"
+#terrain 77 792
+#landname 78 "Sailor's Home"
+#terrain 78 4
+#landname 79 "Lake Poggyfock"
+#terrain 79 517
+#landname 80 "Mount Dymryl"
+#terrain 80 4194440
+#landname 81 "Breakspine Peak"
+#terrain 81 4194816
+#landname 82 "L'argaan"
+#terrain 82 4194857
+#landname 83 "Low Reach"
+#terrain 83 512
+#landname 84 "High Lizardwood"
+#terrain 84 136
+#landname 85 "Northwatch"
+#terrain 85 37749000
+#landname 86 "The Blue Gate"
+#terrain 86 5
+#landname 87 "Dismal Deep"
+#terrain 87 33554436
+#landname 88 "North Urrap Ocean"
+#terrain 88 4
+#landname 89 "Deluvian Hills"
+#terrain 89 784
+#landname 90 "Souldeep Sea"
+#terrain 90 4
+#landname 91 "Dymryl Bay"
+#terrain 91 516
+#landname 92 "Manalaeus"
+#terrain 92 37749001
+#landname 93 "Poison Vale"
+#terrain 93 696
+#landname 94 "Mount Blackhawk"
+#terrain 94 4194816
+#landname 95 "East S'sothoswamp"
+#terrain 95 4194856
+#landname 96 "South Signal Tower"
+#terrain 96 785
+#landname 97 "Lizardwood"
+#terrain 97 4194696
+#landname 98 "Sulphur Spring"
+#terrain 98 560
+#landname 99 "Scimitar Swallow"
+#terrain 99 517
+#landname 100 "East Valenwood"
+#terrain 100 4194440
+#landname 101 "Darban's Deep"
+#terrain 101 4
+#landname 102 "Vyrwater"
+#terrain 102 4
+#landname 103 "Copper Hills"
+#terrain 103 528
+#landname 104 "Southwest Valenwood"
+#terrain 104 648
+#landname 105 "Grinton"
+#terrain 105 768
+#landname 106 "Dariel"
+#terrain 106 776
+#landname 107 "Darban's Redoubt"
+#terrain 107 528
+#landname 108 "West S'sothoswamp"
+#terrain 108 4194856
+#landname 109 "The Jaws"
+#terrain 109 4
+#landname 110 "Scimitar Point"
+#terrain 110 512
+#landname 111 "Marble Mountains"
+#terrain 111 4194568
+#landname 112 "Heart of Valenwood"
+#terrain 112 4194440
+#landname 113 "North Signal Tower"
+#terrain 113 513
+#landname 114 "Opal River"
+#terrain 114 33554696
+#landname 115 "Purple Cliff"
+#terrain 115 4195080
+#landname 116 "Calassian Rise"
+#terrain 116 4194816
+#landname 117 "Bogbottom Lake"
+#terrain 117 516
+#landname 118 "Valen"
+#terrain 118 4194696
+#landname 119 "East Aalas Forest"
+#terrain 119 4195200
+#landname 120 "The Sea of Dallor"
+#terrain 120 4
+#landname 121 "West Aalas Forest"
+#terrain 121 408
+#landname 122 "Throne of Kyrgan"
+#terrain 122 4195072
+#landname 123 "Mirror of Doom"
+#terrain 123 4
+#landname 124 "Northwest Valenwood"
+#terrain 124 37748872
+#landname 125 "Aalas Forest"
+#terrain 125 664
+#landname 126 "Pyre Sands"
+#terrain 126 576
+#landname 127 "Shatterspine"
+#terrain 127 538
+#landname 128 "Sunshadow"
+#terrain 128 4194816
+#landname 129 "Molehill"
+#terrain 129 4195072
+#landname 130 "Hollorn's Gap"
+#terrain 130 4195072
+#landname 131 "Stronghold"
+#terrain 131 24
+#landname 132 "Gol Dallor"
+#terrain 132 769
+#landname 133 "Urfingl"
+#terrain 133 792
+#landname 134 "Puddlekeep"
+#terrain 134 517
+#landname 135 "Urklos"
+#terrain 135 4194816
+#landname 136 "Balorin Fields"
+#terrain 136 4194560
+#landname 137 "Valadar"
+#terrain 137 768
+#landname 138 "Siren's Refuge"
+#terrain 138 517
+#landname 139 "Hell's High Road"
+#terrain 139 16777745
+#landname 140 "Blessed Gorge"
+#terrain 140 4195080
+#landname 141 "Garden of the Gods"
+#terrain 141 4194568
+#landname 142 "Sea Ledge"
+#terrain 142 528
+#landname 143 "Stonekeep Hollow"
+#terrain 143 20972034
+#landname 144 "Ornsmouth"
+#terrain 144 517
+#landname 145 "Forgos Fell"
+#terrain 145 792
+#landname 146 "Dry Reach"
+#terrain 146 20972032
+#landname 147 "Hyplos"
+#terrain 147 0
+#landname 148 "Plain of Mungo"
+#terrain 148 512
+#landname 149 "Devilsgate"
+#terrain 149 4752
+#landname 150 "Stallos"
+#terrain 150 4194824
+#landname 151 "The Dead Land"
+#terrain 151 4688
+#landname 152 "Shipsink Sea"
+#terrain 152 4
+#landname 153 "Sennescor"
+#terrain 153 0
+#landname 154 "West Blessed Basin"
+#terrain 154 4194568
+#landname 155 "East Blessed Basin"
+#terrain 155 4194568
+#landname 156 "Well of Sorrows"
+#terrain 156 517
+#landname 157 "Ashwater"
+#terrain 157 20972040
+#landname 158 "Reaper's Reach"
+#terrain 158 536
+#landname 159 "Mermaid Sea"
+#terrain 159 4
+#landname 160 "Idlewater"
+#terrain 160 552
+#landname 161 "Shark's Maw"
+#terrain 161 516
+#landname 162 "The River Orn"
+#terrain 162 4194312
+#landname 163 "West Illithian Sea"
+#terrain 163 516
+#landname 164 "Sleeper's Embrace"
+#terrain 164 4194312
+#landname 165 "Bloodsponge Swamp"
+#terrain 165 544
+#landname 166 "Northwest Blessed Basin"
+#terrain 166 20971784
+#landname 167 "Gol Draxos"
+#terrain 167 528
+#landname 168 "Mount Karghad"
+#terrain 168 528
+#landname 169 "Northeast Blessed Basin"
+#terrain 169 4195080
+#landname 170 "East Illithian Sea"
+#terrain 170 516
+#landname 171 "Karghad Hills"
+#terrain 171 24
+#landname 172 "Pitfall"
+#terrain 172 600
+#landname 173 "Karghad's Crossing"
+#terrain 173 4
+#landname 174 "Anphalos"
+#terrain 174 4194570
+#landname 175 "Golem Hills"
+#terrain 175 24
+#landname 176 "Fang Ridge"
+#terrain 176 792
+#landname 177 "Hope's End"
+#terrain 177 16777792
+#landname 178 "Urdak"
+#terrain 178 528
+#landname 179 "Fennis"
+#terrain 179 4194344
+#landname 180 "Duk Duk Guz"
+#terrain 180 528
+
+-- Province neighbours
+#neighbour 1 171
+#neighbourspec 1 171 1
+#neighbour 1 10
+#neighbour 1 21
+#neighbour 1 179
+#neighbourspec 1 179 2
+#neighbour 2 170
+#neighbour 2 22
+#neighbour 2 177
+#neighbour 2 12
+#neighbour 2 165
+#neighbour 3 163
+#neighbour 3 170
+#neighbour 3 12
+#neighbour 3 25
+#neighbour 3 174
+#neighbour 4 162
+#neighbour 4 6
+#neighbour 4 164
+#neighbourspec 4 164 2
+#neighbour 4 175
+#neighbourspec 4 175 2
+#neighbour 4 9
+#neighbourspec 4 9 2
+#neighbour 4 24
+#neighbour 5 169
+#neighbourspec 5 169 1
+#neighbour 5 6
+#neighbour 5 23
+#neighbour 5 26
+#neighbour 5 13
+#neighbour 6 166
+#neighbour 6 35
+#neighbour 6 23
+#neighbourspec 6 23 1
+#neighbour 7 9
+#neighbour 7 20
+#neighbour 7 172
+#neighbour 7 177
+#neighbour 7 175
+#neighbour 8 179
+#neighbour 8 21
+#neighbourspec 8 21 2
+#neighbour 8 19
+#neighbour 8 13
+#neighbour 9 24
+#neighbourspec 9 24 2
+#neighbour 9 30
+#neighbour 9 175
+#neighbour 9 20
+#neighbour 10 14
+#neighbour 10 31
+#neighbour 10 171
+#neighbour 10 21
+#neighbour 10 36
+#neighbourspec 10 36 2
+#neighbour 11 173
+#neighbour 11 15
+#neighbour 11 180
+#neighbour 11 16
+#neighbour 11 29
+#neighbour 12 170
+#neighbour 12 22
+#neighbour 12 28
+#neighbour 12 25
+#neighbour 13 33
+#neighbour 13 19
+#neighbourspec 13 19 2
+#neighbour 13 26
+#neighbour 14 173
+#neighbour 14 46
+#neighbour 14 16
+#neighbour 14 168
+#neighbour 14 171
+#neighbour 14 31
+#neighbour 14 36
+#neighbour 15 18
+#neighbour 15 178
+#neighbour 15 180
+#neighbour 15 37
+#neighbour 16 173
+#neighbour 16 46
+#neighbour 16 29
+#neighbour 17 25
+#neighbour 17 32
+#neighbour 17 18
+#neighbour 17 176
+#neighbour 17 174
+#neighbourspec 17 174 2
+#neighbour 18 32
+#neighbourspec 18 32 2
+#neighbour 18 34
+#neighbourspec 18 34 2
+#neighbour 19 31
+#neighbour 19 33
+#neighbour 19 21
+#neighbour 19 43
+#neighbourspec 19 43 2
+#neighbour 20 38
+#neighbour 20 30
+#neighbour 20 27
+#neighbour 21 31
+#neighbour 21 179
+#neighbourspec 21 179 2
+#neighbour 21 39
+#neighbour 21 36
+#neighbourspec 21 36 2
+#neighbour 22 55
+#neighbour 22 60
+#neighbour 22 27
+#neighbour 22 28
+#neighbour 23 47
+#neighbour 23 35
+#neighbour 23 26
+#neighbour 24 40
+#neighbour 24 30
+#neighbour 25 28
+#neighbour 25 32
+#neighbourspec 25 32 2
+#neighbour 25 174
+#neighbourspec 25 174 2
+#neighbour 26 33
+#neighbour 26 47
+#neighbour 26 43
+#neighbourspec 26 43 2
+#neighbour 27 55
+#neighbour 27 38
+#neighbour 28 60
+#neighbour 28 41
+#neighbour 29 46
+#neighbour 29 44
+#neighbour 29 37
+#neighbour 30 38
+#neighbour 31 36
+#neighbour 31 39
+#neighbour 31 43
+#neighbour 31 33
+#neighbour 32 45
+#neighbour 32 34
+#neighbour 33 43
+#neighbour 33 47
+#neighbour 34 37
+#neighbour 34 45
+#neighbour 35 47
+#neighbour 35 42
+#neighbour 36 46
+#neighbour 36 51
+#neighbour 36 39
+#neighbour 37 49
+#neighbourspec 37 49 2
+#neighbour 37 44
+#neighbourspec 37 44 2
+#neighbour 38 55
+#neighbour 38 48
+#neighbour 39 51
+#neighbour 39 43
+#neighbour 39 53
+#neighbourspec 39 53 1
+#neighbour 40 42
+#neighbour 40 54
+#neighbourspec 40 54 2
+#neighbour 41 60
+#neighbour 41 50
+#neighbour 42 47
+#neighbour 42 54
+#neighbour 42 56
+#neighbour 43 47
+#neighbour 43 58
+#neighbour 43 53
+#neighbour 44 46
+#neighbour 44 49
+#neighbour 44 57
+#neighbour 44 62
+#neighbour 45 52
+#neighbour 46 76
+#neighbour 46 69
+#neighbour 46 51
+#neighbour 46 57
+#neighbour 47 56
+#neighbour 47 68
+#neighbour 47 58
+#neighbour 48 55
+#neighbour 48 59
+#neighbour 49 62
+#neighbour 50 60
+#neighbour 50 65
+#neighbour 50 52
+#neighbour 51 69
+#neighbour 51 61
+#neighbour 52 63
+#neighbour 52 65
+#neighbour 53 58
+#neighbour 53 70
+#neighbour 53 61
+#neighbourspec 53 61 2
+#neighbour 54 78
+#neighbour 54 56
+#neighbourspec 54 56 2
+#neighbour 54 67
+#neighbour 55 60
+#neighbour 55 88
+#neighbour 55 87
+#neighbour 55 59
+#neighbour 56 68
+#neighbour 56 78
+#neighbour 57 76
+#neighbour 57 75
+#neighbour 57 62
+#neighbour 58 70
+#neighbour 58 72
+#neighbour 58 74
+#neighbour 58 68
+#neighbour 59 71
+#neighbour 59 87
+#neighbour 59 66
+#neighbour 60 65
+#neighbour 60 91
+#neighbour 60 88
+#neighbour 61 77
+#neighbour 61 70
+#neighbourspec 61 70 2
+#neighbour 61 69
+#neighbour 62 64
+#neighbour 62 75
+#neighbour 63 91
+#neighbour 63 65
+#neighbour 63 80
+#neighbourspec 63 80 2
+#neighbour 63 73
+#neighbour 63 64
+#neighbourspec 63 64 2
+#neighbour 64 73
+#neighbour 65 91
+#neighbour 66 71
+#neighbour 66 79
+#neighbour 66 67
+#neighbour 67 79
+#neighbour 67 78
+#neighbour 67 81
+#neighbour 67 89
+#neighbour 68 78
+#neighbour 68 90
+#neighbour 68 86
+#neighbour 68 74
+#neighbour 69 76
+#neighbour 69 77
+#neighbour 70 72
+#neighbour 70 85
+#neighbourspec 70 85 2
+#neighbour 70 77
+#neighbour 71 87
+#neighbour 71 79
+#neighbour 72 74
+#neighbour 72 83
+#neighbour 72 85
+#neighbour 73 80
+#neighbour 73 82
+#neighbour 74 86
+#neighbour 74 83
+#neighbour 75 76
+#neighbour 75 92
+#neighbour 75 84
+#neighbour 76 101
+#neighbour 76 92
+#neighbour 76 77
+#neighbour 77 101
+#neighbour 77 85
+#neighbour 77 94
+#neighbour 78 90
+#neighbour 78 102
+#neighbour 78 81
+#neighbour 78 104
+#neighbour 79 96
+#neighbour 79 89
+#neighbour 79 87
+#neighbour 80 91
+#neighbour 80 95
+#neighbour 80 98
+#neighbour 81 102
+#neighbour 81 89
+#neighbour 82 84
+#neighbourspec 82 84 2
+#neighbour 82 93
+#neighbour 82 95
+#neighbour 83 86
+#neighbour 83 99
+#neighbour 83 103
+#neighbour 83 85
+#neighbour 84 93
+#neighbour 84 97
+#neighbour 84 92
+#neighbour 85 99
+#neighbour 85 94
+#neighbour 86 90
+#neighbour 86 100
+#neighbour 86 103
+#neighbour 86 99
+#neighbour 87 96
+#neighbour 87 109
+#neighbour 87 119
+#neighbour 87 88
+#neighbour 88 91
+#neighbour 88 105
+#neighbour 88 121
+#neighbour 88 125
+#neighbour 88 119
+#neighbour 89 109
+#neighbour 89 102
+#neighbour 89 96
+#neighbour 90 104
+#neighbour 90 112
+#neighbour 90 100
+#neighbour 91 98
+#neighbour 91 111
+#neighbour 91 114
+#neighbour 91 105
+#neighbour 92 101
+#neighbour 92 97
+#neighbour 92 106
+#neighbour 93 108
+#neighbour 93 97
+#neighbour 94 101
+#neighbour 94 99
+#neighbour 94 107
+#neighbour 95 117
+#neighbour 95 108
+#neighbourspec 95 108 2
+#neighbour 95 98
+#neighbour 96 109
+#neighbour 96 113
+#neighbourspec 96 113 2
+#neighbour 97 106
+#neighbour 98 117
+#neighbour 98 115
+#neighbour 98 111
+#neighbour 99 110
+#neighbour 99 123
+#neighbour 99 107
+#neighbour 99 103
+#neighbour 100 103
+#neighbour 100 112
+#neighbour 100 118
+#neighbour 101 152
+#neighbour 101 127
+#neighbour 101 123
+#neighbour 101 107
+#neighbour 101 106
+#neighbour 101 116
+#neighbour 101 135
+#neighbour 101 126
+#neighbour 102 109
+#neighbour 102 120
+#neighbour 102 104
+#neighbour 103 123
+#neighbour 103 110
+#neighbour 103 118
+#neighbour 104 120
+#neighbour 104 112
+#neighbour 104 124
+#neighbour 105 121
+#neighbour 105 114
+#neighbour 106 116
+#neighbour 107 123
+#neighbour 107 127
+#neighbourspec 107 127 2
+#neighbour 107 110
+#neighbourspec 107 110 2
+#neighbour 108 117
+#neighbour 108 122
+#neighbour 109 113
+#neighbour 109 119
+#neighbour 109 128
+#neighbour 109 120
+#neighbour 110 123
+#neighbour 111 114
+#neighbour 111 131
+#neighbourspec 111 131 2
+#neighbour 111 115
+#neighbour 112 118
+#neighbourspec 112 118 2
+#neighbour 112 124
+#neighbourspec 112 124 2
+#neighbour 112 141
+#neighbourspec 112 141 1
+#neighbour 113 128
+#neighbourspec 113 128 2
+#neighbour 113 119
+#neighbourspec 113 119 2
+#neighbour 114 121
+#neighbour 114 131
+#neighbour 115 117
+#neighbour 115 130
+#neighbour 116 122
+#neighbour 116 126
+#neighbour 116 129
+#neighbour 117 122
+#neighbour 117 130
+#neighbour 117 142
+#neighbour 117 137
+#neighbour 117 134
+#neighbour 118 123
+#neighbour 118 133
+#neighbour 118 140
+#neighbourspec 118 140 1
+#neighbour 119 128
+#neighbour 119 125
+#neighbour 120 128
+#neighbour 120 143
+#neighbour 120 150
+#neighbour 120 144
+#neighbour 120 132
+#neighbour 120 136
+#neighbour 120 124
+#neighbour 121 125
+#neighbourspec 121 125 2
+#neighbour 121 131
+#neighbour 122 134
+#neighbour 122 129
+#neighbour 123 133
+#neighbour 123 138
+#neighbour 123 145
+#neighbour 123 127
+#neighbour 124 136
+#neighbour 124 141
+#neighbour 125 139
+#neighbour 126 152
+#neighbour 126 129
+#neighbour 126 135
+#neighbourspec 126 135 2
+#neighbour 127 145
+#neighbour 127 135
+#neighbour 128 143
+#neighbour 129 134
+#neighbour 129 159
+#neighbour 129 152
+#neighbour 130 142
+#neighbour 130 146
+#neighbour 131 146
+#neighbourspec 131 146 1
+#neighbour 131 147
+#neighbour 132 144
+#neighbour 132 150
+#neighbourspec 132 150 2
+#neighbour 132 136
+#neighbourspec 132 136 2
+#neighbour 133 138
+#neighbour 133 140
+#neighbour 133 155
+#neighbour 134 159
+#neighbour 134 137
+#neighbour 135 152
+#neighbour 135 158
+#neighbourspec 135 158 2
+#neighbour 136 144
+#neighbour 136 162
+#neighbour 136 154
+#neighbour 136 141
+#neighbour 137 159
+#neighbour 137 161
+#neighbour 137 142
+#neighbour 138 155
+#neighbour 138 157
+#neighbour 138 145
+#neighbour 139 153
+#neighbour 139 149
+#neighbour 140 156
+#neighbour 140 141
+#neighbour 140 155
+#neighbour 141 156
+#neighbour 141 154
+#neighbour 142 161
+#neighbour 142 146
+#neighbour 143 160
+#neighbourspec 143 160 1
+#neighbour 143 150
+#neighbour 144 150
+#neighbour 144 162
+#neighbour 145 157
+#neighbour 145 151
+#neighbour 146 161
+#neighbour 146 148
+#neighbour 147 163
+#neighbour 147 170
+#neighbour 147 148
+#neighbour 147 153
+#neighbour 148 161
+#neighbour 148 163
+#neighbour 148 174
+#neighbourspec 148 174 2
+#neighbour 149 165
+#neighbour 149 160
+#neighbour 149 153
+#neighbour 150 162
+#neighbourspec 150 162 2
+#neighbour 150 164
+#neighbour 151 158
+#neighbour 152 159
+#neighbour 152 173
+#neighbour 152 168
+#neighbour 152 158
+#neighbour 153 170
+#neighbour 153 165
+#neighbour 154 156
+#neighbour 154 162
+#neighbour 154 166
+#neighbour 155 156
+#neighbour 155 169
+#neighbour 155 167
+#neighbour 155 157
+#neighbour 156 166
+#neighbour 156 169
+#neighbour 157 167
+#neighbour 158 168
+#neighbourspec 158 168 2
+#neighbour 158 171
+#neighbour 159 173
+#neighbour 159 161
+#neighbour 159 178
+#neighbour 159 180
+#neighbour 160 165
+#neighbour 160 172
+#neighbour 160 164
+#neighbour 161 178
+#neighbour 161 176
+#neighbour 161 174
+#neighbour 161 163
+#neighbour 162 166
+#neighbour 162 164
+#neighbour 163 174
+#neighbour 163 170
+#neighbour 164 175
+#neighbourspec 164 175 2
+#neighbour 164 172
+#neighbourspec 164 172 2
+#neighbour 165 170
+#neighbour 165 177
+#neighbour 165 172
+#neighbour 166 169
+#neighbour 167 179
+#neighbourspec 167 179 1
+#neighbour 168 173
+#neighbour 168 171
+#neighbour 172 177
+#neighbour 172 175
+#neighbour 173 180
+#neighbour 174 176
+#neighbour 176 178
+#neighbour 178 180
+
+-- Special per province commands
+
+--

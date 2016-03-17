@@ -1,6 +1,3 @@
-# dom4utils
-An ever expanding set of pythonic utilities for Dominions 4.
-
 teamOrg.py
 -Provides a function by which to sort and match various team combination rankings. Not too complicated.
 
