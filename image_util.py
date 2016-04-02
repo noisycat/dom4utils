@@ -158,10 +158,11 @@ connections = dict()
 connections['all'] = set([(int(s[0]),int(s[1])) for s in re.findall("#neighbour (\S+) (\S+)",mapfiledata)])
 connections['river'] = set([(int(s[0]),int(s[1])) for s in re.findall("#neighbourspec (\S+) (\S+) 2",mapfiledata)])
 connections['mountain'] = set([(int(s[0]),int(s[1])) for s in re.findall("#neighbourspec (\S+) (\S+) 1",mapfiledata)])
+connections['info-only'] = set([(int(s[0]),int(s[1])) for s in re.findall("#neighbourspec (\S+) (\S+) 4",mapfiledata)])
 connections['land'] = filter(lambda x: x in connections['mountain'] or x in connections['river'], connections['all'])
 connections['water-water']  = filter(lambda x: (checkType(x[0],'Sea') and checkType(x[1],'Sea')), connections['all'])
-connections['water-land'] = filter(lambda x: (checkType(x[0],'Sea') or checkType(x[1],'Sea')), connections['all'].difference(connections['water-water']))
-connections['normal'] = connections['all'].difference(connections['river'],connections['mountain']).difference(connections['water-water']).difference(connections['water-land'])
+connections['water-land'] = filter(lambda x: (checkType(x[0],'Sea') or checkType(x[1],'Sea')), connections['all'].difference(connections['water-water'],connections['info-only']))
+connections['normal'] = connections['all'].difference(connections['river'],connections['mountain'],connections['water-water'],connections['water-land'],connections['info-only'])
 
 import numpy
 
@@ -316,12 +317,8 @@ for k,xy in zip(range(1,len(whites_xy)+1),whites_xy):
 								draw.text(xymod,str(k),font=fnt,fill=color['gold'])
 								print "Throne ",k
 
-				if checkType(k,'Large Province') and checkType(k,'Farm'):
-								draw.text(xymod,str(k),font=fnt,fill=color['red'])
-								pass
-
-				if checkType(k,'Waste'):
-								draw.text(xymod,str(k),font=fnt,fill=color['purple'])
+				if checkType(k,'Large Province'):
+								draw.text(xymod,str(k),font=fnt,fill=color['gold'])
 								pass
 
 				#elif checkNeighbors(k,'Throne',connections['all']):
