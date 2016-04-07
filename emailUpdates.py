@@ -5,7 +5,6 @@ import argparse, os, csv, re, itertools
 try:
 				import mySMTP 
 except ImportError as e:
-#plaintext passwords aren't smart. I should figure out how to change this to not plaintext
 				print '''mySMTP is something done on a per user basis and can be as simple as:
 import smtplib
 
