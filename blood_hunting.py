@@ -68,7 +68,7 @@ class Province():
 								for result in results: output += "({0:2},{1:2}) ".format(*result)
 
 								# income
-								output += "{0:.2f}% ".format(100*self.incomePercent())
+								output += "{:.2%} ".format(self.incomePercent())
 
 								# murder through patrolling
 								output += "{0:4} ".format(self.patrolPurge())
