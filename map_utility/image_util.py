@@ -5,7 +5,7 @@ import re, math, os, platform, itertools, argparse, io
 # Need numpy array
 from numpy import array
 
-# Need Pillow
+# Need Pillow 3 with SGI_ support
 from PIL import Image, ImageDraw, ImageFont, ImageChops
 from PIL import VERSION as PIL_VERSION, PILLOW_VERSION as PIL_PILLOW_VERSION
 
