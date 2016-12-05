@@ -41,12 +41,12 @@ parser.add_argument('--offset-y',default=0,type=int,help='offset amount in the y
 parser.add_argument('--connection-types', default='all')
 parser.add_argument('--image-reduce',type=int, default=1, help='contraction of the output image (makes the resulting image smaller)')
 parser.add_argument('--fontsize-province-number', type=int, default=0,help='fontsize choice for province number')
-parser.add_argument('--color-province-number', default=defaults.colors.black,help='color choice for province number')
-parser.add_argument('--color-mountain-path', nargs=4, type=int, default=defaults.colors.mountain, help='color choice for mountain paths', choices=range(256))
-parser.add_argument('--color-river-path', nargs=4, type=int, default=defaults.colors.river, help='color choice for river paths',choices=range(256))
-parser.add_argument('--color-aquatic-path', nargs=4, type=int, default=defaults.colors.aquatic, help='color choice for aquatic paths',choices=range(256))
-parser.add_argument('--color-amphibious-path', nargs=4, type=int, default=defaults.colors.amphibious, help='color choice for amphibious paths',choices=range(256))
-parser.add_argument('--color-normal-path', nargs=4, type=int, default=defaults.colors.normal, help='color choice for normal paths',choices=range(256))
+parser.add_argument('--color-province-number', default=defaults.colors.black,help='color choice for province number', choices=range(256), metavar='0 .. 255')
+parser.add_argument('--color-mountain-path', nargs=4, type=int, default=defaults.colors.mountain, help='color choice for mountain paths', choices=range(256), metavar='0 .. 255')
+parser.add_argument('--color-river-path', nargs=4, type=int, default=defaults.colors.river, help='color choice for river paths',choices=range(256), metavar='0 .. 255')
+parser.add_argument('--color-aquatic-path', nargs=4, type=int, default=defaults.colors.aquatic, help='color choice for aquatic paths',choices=range(256), metavar='0 .. 255')
+parser.add_argument('--color-amphibious-path', nargs=4, type=int, default=defaults.colors.amphibious, help='color choice for amphibious paths',choices=range(256), metavar='0 .. 255')
+parser.add_argument('--color-normal-path', nargs=4, type=int, default=defaults.colors.normal, help='color choice for normal paths',choices=range(256), metavar='0 .. 255')
 args = parser.parse_args()
 
 # these can be replaced with an Action at some point - but I'm not interested in doing that right now

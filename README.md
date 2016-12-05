@@ -1,4 +1,4 @@
-# dom4utils
+WHAT:
 An ever expanding set of pythonic utilities for Dominions 4.
 
 teamOrg.py
@@ -9,4 +9,9 @@ image_util.py
 
 loadData.py
 -Allows you to have access to all the data in the dom4modinspector through python interfaces and methods. There's a lot of hardcoded stuff in that project that hasn't been and may not be replicated here - but if you're looking to comb through CSV files as dictionaries, this will help you out with that! Useful for trying to min/max various unit comparisons.
+
+INSTALLATION REQUIREMENTS:
+Still very manual approach - to use this without installing it, just prepend PYTHONPATH with this directory location.
+
+You'll still need PIL, numpy, and others.
 
