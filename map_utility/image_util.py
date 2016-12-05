@@ -213,16 +213,6 @@ def drawConnection(drawObj, segs, color, width=6):
         drawObj.line(segs[1],fill=color,width=6)
         drawObj.line(segs[2],fill=color,width=6)
 
-'''
-# test section
-x = (84, 164)
-lx = line(x)
-draw.line(lx,fill=(25,255,0,255),width=6)
-imdata = periodic(lx[0],lx[1],(im.width,im.height))
-draw.line(imdata[0],fill=(255,0,0,255),width=6)
-draw.line(imdata[1],fill=(255,0,255,255),width=6)
-'''
-
 # load a font
 fontsize = max(im.width,im.height)/75 if args.fontsize_province_number <= 0 else args.fontsize_province_number
 fnt = ImageFont.truetype('Arial.ttf',fontsize)
@@ -287,28 +277,3 @@ offset = offset.resize((im.width/args.image_reduce,im.height/args.image_reduce),
 offset.save(mapname+'_ours.png')
 print [(key,[checkType(k,key,mapfiledata) for k in range(1,len(whites_xy)+1)].count(True)) for key in interpretMask(tuple((1,)*27))]
 print [k for k in range(1,len(whites_xy)+1) if checkType(k,'Mountain',mapfiledata) ]
-'''
--- Special per province commands
--- atlantis
-#specstart 87 88
--- mictlan 
-#specstart 41 63
--- ashdod
-#specstart 55 32
--- xibalba
-#specstart 58 114
--- machaka 
-#specstart 43 92
-
--- oceania
-#specstart 90 123
--- pangea
-#specstart 48 39
--- jotunheim
-#specstart 51 85
--- asphodel
-#specstart 49 124
--- agartha
-#specstart 44 23
---
-'''
