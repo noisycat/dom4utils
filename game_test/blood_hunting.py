@@ -35,7 +35,7 @@ class Province():
 
     def patrolPurge(self):
         # destealth
-        self.destealth = int(sum(map(lambda x: x.destealth,self.patrollers))) - min(unrest/2,50)+max(self.pd - 14,0)
+        self.destealth = int(sum(map(lambda x: x.destealth,self.patrollers))) - min(self.unrest/2,50)+max(self.pd - 14,0)
         effectiveness = self.destealth + open_roll(1,25)+open_roll(1,25)-open_roll(1,25)-open_roll(1,25)
 
         patrol = self.pd / 10

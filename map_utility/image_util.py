@@ -70,20 +70,20 @@ mapfiledata = re.sub(r'#dom2title (.+)$',r'#dom2title "\1 Competitive"$',mapfile
 mapimagefilename = re.findall(r'#imagefile (\S+)$',mapfiledata,re.M)[0]
 try:
     mapimagepath = os.path.join(maplocalfolder,mapimagefilename)
-    os.stat(mapimagepath)
+    stat = os.stat(mapimagepath)
 
 # not in the local folder, maybe image is in...
 except OSError as e:
     # the user folder
     try:
 	mapimagepath = os.path.join(user_maps,mapimagefilename)
-	os.stat(mapimagepath)
+	stat = os.stat(mapimagepath)
 
     except OSError as e2:
 	# the official folder
 	try:
 	    mapimagepath = os.path.join(dominions_maps,mapimagefilename)
-	    os.stat(mapimagepath)
+	    stat = os.stat(mapimagepath)
 	except OSError as e3:
 	    raise Exception('OSError',"Can't find the required image file in any of the directories:{0:s}:{1:s}:{2:s}".format(maplocalfolder, user_maps, dominions_maps))
 
