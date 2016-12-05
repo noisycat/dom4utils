@@ -7,7 +7,6 @@ class gamedata:
 
 def getTokenByField(_dict,_care,field_to_search, field_to_get='id'):
     return list(k[field_to_get] for k in _dict if k[field_to_search]==_care)[0]
-    
 
 def getAllTokenByField(_dict,_care,field_to_search, field_to_get='id'):
     return list(k[field_to_get] for k in _dict if k[field_to_search]==_care)
