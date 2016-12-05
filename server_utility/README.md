@@ -6,7 +6,7 @@ Several scripts that can be used in conjunction with running dominions servers t
 
 ## Files
 
-### emailHelper.py
+### emailUpdates.py
 
 script purposed to send emails to players for reminders - best paired with cron and the dom4 option --postexec.
 
