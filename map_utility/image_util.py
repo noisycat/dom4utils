@@ -27,7 +27,8 @@ print "0.4.2" >= WAND_VERSION
 
 # local modules
 import defaults
-from terrain import rebuildMask, breakdown, interpretMask, getBit, setType, flipType, checkType, getConnections, checkPeriodicNS, checkPeriodicEW
+from terrain import ValueFromMask, MaskFromValue, TextFromMask, getBitIndex, setType, flipType, checkType, getConnections, checkPeriodicNS, checkPeriodicEW, provinceValue
+import profiles
 
 parser = argparse.ArgumentParser(description='Dominions 4 Map Analyzer')
 parser.add_argument('mappath',type=str)
@@ -38,15 +39,18 @@ parser.add_argument('--noshow',action="store_true",default=False,help='does not 
 parser.add_argument('--saveas',type=str,default='default_image_name',help='path/name to save the resulting image file')
 parser.add_argument('--offset-x',default=0,type=int,help='offset amount in the x-axis for wrapped images')
 parser.add_argument('--offset-y',default=0,type=int,help='offset amount in the y-axis for wrapped images')
-parser.add_argument('--connection-types', default='all')
+parser.add_argument('--connection-types', default='all',choices = ['all','aquatic','normal','mountain','amphibious','river','info-only','passable'])
 parser.add_argument('--image-reduce',type=int, default=1, help='contraction of the output image (makes the resulting image smaller)')
 parser.add_argument('--fontsize-province-number', type=int, default=0,help='fontsize choice for province number')
-parser.add_argument('--color-province-number', default=defaults.colors.black,help='color choice for province number', choices=range(256), metavar='0 .. 255')
+parser.add_argument('--color-province-number', nargs=4, type=int, default=defaults.colors.black, help='color choice for province number', choices=range(256), metavar='0 .. 255')
+parser.add_argument('--profile', default='default', help='''sets a series of formatting choices to emphasize certain aspects of a map''',
+choices=profiles.__all__)
 parser.add_argument('--color-mountain-path', nargs=4, type=int, default=defaults.colors.mountain, help='color choice for mountain paths', choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-river-path', nargs=4, type=int, default=defaults.colors.river, help='color choice for river paths',choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-aquatic-path', nargs=4, type=int, default=defaults.colors.aquatic, help='color choice for aquatic paths',choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-amphibious-path', nargs=4, type=int, default=defaults.colors.amphibious, help='color choice for amphibious paths',choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-normal-path', nargs=4, type=int, default=defaults.colors.normal, help='color choice for normal paths',choices=range(256), metavar='0 .. 255')
+parser.add_argument('--color-info-only-path', nargs=4, type=int, default=defaults.colors.info_only, help='color choice for info_only paths',choices=range(256), metavar='0 .. 255')
 args = parser.parse_args()
 
 # these can be replaced with an Action at some point - but I'm not interested in doing that right now
@@ -55,6 +59,7 @@ args.color_river_path = tuple(args.color_river_path)
 args.color_normal_path = tuple(args.color_normal_path)
 args.color_amphibious_path = tuple(args.color_amphibious_path)
 args.color_aquatic_path = tuple(args.color_aquatic_path)
+args.color_info_only_path = tuple(args.color_info_only_path)
 print args
 
 # suck in map file
@@ -201,6 +206,7 @@ color['river'] = args.color_river_path
 color['aquatic'] = args.color_aquatic_path
 color['amphibious'] = args.color_amphibious_path
 color['normal'] = args.color_normal_path
+color['info-only'] = args.color_info_only_path
 
 def drawConnection(drawObj, segs, color, width=6):
     if len(segs)==1: 
@@ -221,6 +227,8 @@ import random
 # NO MORE RANDOM NUMBERS PAST THIS 
 random.seed(2718)
 
+""" Example section of taking a map, turning off some throne locations, turning
+on some caves, turning off the thrones that were already on"""
 if 0:
     #changes to map data
     for k in range(1,len(whites_xy)+1):
@@ -243,8 +251,15 @@ def checkNeighbors(k,flag,connectors,mapfiledata):
 ratios = map(lambda x: 1 if 4 <= numLandConnections(x,connections['normal'].union(connections['river'],connections['mountain'])) and not checkType(x,'Nostart',mapfiledata) else 0, range(1,len(whites_xy)+1))
 #ratios = map(lambda x: 1 if 4 <= numLandConnections(x,connections['normal'].union(connections['river'],connections['mountain'])) and not checkType(x,'Nostart',mapfiledata) and not checkNeighbors(x,'Throne',connections['normal'].union(connections['river'],connections['mountain'])) else 0, range(1,len(terrain_types)+1))
 
-# draw connections
-for key in ('normal','mountain','river','aquatic','amphibious'):
+# draw connections based on input
+if args.connection_types == 'all':
+    keys = ('normal','mountain','river','aquatic','amphibious','info-only')
+elif args.connection_types == 'passable':
+    keys = ('normal','mountain','river','aquatic','amphibious')
+else:
+    keys = [args.connection_types]
+
+for key in keys:
     for x in connections[key]:
         #if checkType(x[0],'Start',mapfiledata) or checkType(x[1],'Start',mapfiledata): 
             segs = periodic(line(x)[0],line(x)[1],(im.width,im.height))
@@ -253,20 +268,11 @@ for key in ('normal','mountain','river','aquatic','amphibious'):
 # label all points
 for k,xy in zip(range(1,len(whites_xy)+1),whites_xy):
     xymod = (xy[0] - fontsize * (xy[0] > im.width - fontsize),xy[1] - fontsize * (xy[1] > im.height-fontsize))
-    if checkType(k,'Throne',mapfiledata): 
-        draw.text(xymod,str(k),font=fnt,fill=defaults.colors.gold)
-        print "Throne ",k
-
-    if checkType(k,'Large Province',mapfiledata):
-        draw.text(xymod,str(k),font=fnt,fill=defaults.colors.gold)
-        pass
-
-    #elif checkNeighbors(k,'Throne',connections['all'],mapfiledata):
-    #    pass
-
-    else:
-        scaled_color = tuple(itertools.chain.from_iterable((array(array(defaults.colors.red)*ratios[k-1],dtype=int)[0:3],(255,))))
-        draw.text(xymod,str(k),font=fnt,fill=tuple(scaled_color))
+    decision_inputs = (args.color_province_number, k, provinceValue(k,mapfiledata), xy)
+    displayThisLabel = eval("profiles."+args.profile).province_filter(*decision_inputs)
+    if displayThisLabel:
+        useFill = eval("profiles."+args.profile).color_scale_transform(*decision_inputs)
+        draw.text(xymod,str(k),font=fnt,fill=useFill)
 
 # form export image
 offset = ImageChops.offset(im,args.offset_x,args.offset_y)
@@ -275,5 +281,5 @@ test = im.resize((im.width/args.image_reduce,im.height/args.image_reduce),Image.
 test.save(mapname+'_connections.png')
 offset = offset.resize((im.width/args.image_reduce,im.height/args.image_reduce),Image.NEAREST)
 offset.save(mapname+'_ours.png')
-print [(key,[checkType(k,key,mapfiledata) for k in range(1,len(whites_xy)+1)].count(True)) for key in interpretMask(tuple((1,)*27))]
+print [(key,[checkType(k,key,mapfiledata) for k in range(1,len(whites_xy)+1)].count(True)) for key in TextFromMask(tuple((1,)*27))]
 print [k for k in range(1,len(whites_xy)+1) if checkType(k,'Mountain',mapfiledata) ]
