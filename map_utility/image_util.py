@@ -1,18 +1,30 @@
 # system modules
 import re, math, os, platform, itertools, argparse, io
+import sys
 
 # specialty system modules
 # Need numpy array
 from numpy import array
 
 # Need Pillow 3 with SGI_ support
-from PIL import Image, ImageDraw, ImageFont, ImageChops
-from PIL import VERSION as PIL_VERSION, PILLOW_VERSION as PIL_PILLOW_VERSION
+try:
+	from PIL import Image, ImageDraw, ImageFont, ImageChops
+except ImportError as e:
+	sys.stderr.write("python-pillow is required for this: https://github.com/python-pillow")
+	raise e
+
+try:
+	from PIL import VERSION as PIL_VERSION, PILLOW_VERSION as PIL_PILLOW_VERSION
+
+except ImportError as e:
+	sys.stderr.write(str(e)+'\n')
+	sys.stderr.write("Couldn't import the VERSION numbers for PIL - you likely have a very old version installed\nTrying to go ahead without it")
+	PIL_VERSION='1.0.0'
+	PIL_PILLOW_VERSION='2.0.0'
 
 # Need Wand
 import wand.image
 from wand.version import VERSION as WAND_VERSION
-
 
 # required version numbers
 
@@ -41,7 +53,7 @@ parser.add_argument('--offset-x',default=0,type=int,help='offset amount in the x
 parser.add_argument('--offset-y',default=0,type=int,help='offset amount in the y-axis for wrapped images')
 parser.add_argument('--connection-types', default='all',choices = ['all','aquatic','normal','mountain','amphibious','river','info-only','passable'])
 parser.add_argument('--image-reduce',type=int, default=1, help='contraction of the output image (makes the resulting image smaller)')
-parser.add_argument('--fontsize-province-number', type=int, default=0,help='fontsize choice for province number')
+parser.add_argument('--fontsize-province-number', type=int, default=0, help='fontsize choice for province number')
 parser.add_argument('--color-province-number', nargs=4, type=int, default=defaults.colors.black, help='color choice for province number', choices=range(256), metavar='0 .. 255')
 parser.add_argument('--profile', default='default', help='''sets a series of formatting choices to emphasize certain aspects of a map''',
 choices=profiles.__all__)
@@ -51,8 +63,8 @@ parser.add_argument('--color-aquatic-path', nargs=4, type=int, default=defaults.
 parser.add_argument('--color-amphibious-path', nargs=4, type=int, default=defaults.colors.amphibious, help='color choice for amphibious paths',choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-normal-path', nargs=4, type=int, default=defaults.colors.normal, help='color choice for normal paths',choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-info-only-path', nargs=4, type=int, default=defaults.colors.info_only, help='color choice for info_only paths',choices=range(256), metavar='0 .. 255')
+parser.add_argument('--fontface', type=str, default=defaults.font[platform.system()],help = 'fontface choice for labels')
 args = parser.parse_args()
-
 # these can be replaced with an Action at some point - but I'm not interested in doing that right now
 args.color_mountain_path = tuple(args.color_mountain_path)
 args.color_river_path = tuple(args.color_river_path)
@@ -61,6 +73,9 @@ args.color_amphibious_path = tuple(args.color_amphibious_path)
 args.color_aquatic_path = tuple(args.color_aquatic_path)
 args.color_info_only_path = tuple(args.color_info_only_path)
 print args
+
+# test font out - its been giving trouble
+fnt = ImageFont.truetype(args.fontface,40)
 
 # suck in map file
 user_maps=os.path.join(args.userpath,'maps')
@@ -118,6 +133,9 @@ data = im.getdata()
 # does this have an alpha channel?
 
 # find the white xy
+size = im.getbbox()
+im.width = size[2]
+im.height = size[3]
 whites_xy = [(x,y) for y in reversed(range(0,im.height)) for x in range(0,im.width) if data.getpixel((x,y)) == (255,255,255,255) or data.getpixel((x,y)) == (255,255,255)]
 
 # whites_xy[k] is the k province xy
@@ -221,7 +239,8 @@ def drawConnection(drawObj, segs, color, width=6):
 
 # load a font
 fontsize = max(im.width,im.height)/75 if args.fontsize_province_number <= 0 else args.fontsize_province_number
-fnt = ImageFont.truetype('Arial.ttf',fontsize)
+
+fnt = ImageFont.truetype(args.fontface,fontsize)
 
 import random
 # NO MORE RANDOM NUMBERS PAST THIS 

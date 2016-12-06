@@ -75,10 +75,3 @@ specials = Profile(color_scale_transform = specialsfxn)
 onlythrones = Profile(province_filter = thronesselection)
 
 __all__ = ['default','editor','specials','thrones','onlythrones']
-
-color = (255,0,0,255)
-provnum = 1
-provtype = 512
-print specialsfxn( color, provnum, provtype )
-provtype = 2**20
-print specialsfxn( color, provnum, provtype )
