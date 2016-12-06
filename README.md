@@ -1,5 +1,7 @@
 # dom4utils
 
+Tools for working with Dominions 4.
+
 ##WHAT:
 
 An ever expanding set of pythonic utilities for Dominions 4.
@@ -10,7 +12,7 @@ An ever expanding set of pythonic utilities for Dominions 4.
 
 Provides a function by which to sort and match various team combination rankings. Not too complicated.
 
-### image_util.py
+### map_analyzer.py
 
 Perhaps my most useful function, this allows you to load a dominions4 .map file and its corresponding image and run various types of analysis on it, as well as print off types of connections graphically. This is great when designing maps or for providing global overlays for team discussions.
 
