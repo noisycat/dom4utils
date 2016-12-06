@@ -12,7 +12,7 @@ def _firstObj(*args):
 class Profile():
     """ Generic profile for image_util driver """
     def __init__(self, color_scale_transform = _firstObj, province_filter =
-            _alwaysTrue):
+            _alwaysTrue, path_filter = _alwaysTrue):
         """
 ::color_scale_transform:: 
     returns a color tuple (e.g. (R,G,B,A)) after having inputs of *args:
@@ -32,6 +32,7 @@ class Profile():
             """
         self.color_scale_transform = color_scale_transform
         self.province_filter = province_filter
+        self.path_filter = path_filter
 
 def _sanitize_color(x):
     """ sanitize entries to 0-255 <int>"""
@@ -48,30 +49,41 @@ def _sanitize_color(x):
 # out of the range of int(0-255) is going to cause errors - so we can sanitize
 # it. could also use a decorator to do this, but meh.
 
+# Province Filter
 def thronesselection(*args):
     """ Example province_filter that returns True only on Throne sites """
     return bool('Throne' in terrain.TextFromValue(args[2]) )
 
+# Color Scalar
 def thronesfxn(*args):
     scalar = int(bool('Throne' in terrain.TextFromValue(args[2]) ))
     scalarfxn = lambda k: scalar if k < 3 else 1
     return _sanitize_color([scalarfxn(i) * args[0][i] for i in range(4) ])
 
+# Color Scalar
 def startonlyfxn(*args):
     scalar = int(bool('Start' in terrain.TextFromValue(args[2]) ))
     scalarfxn = lambda k: scalar if k < 3 else 1
     return _sanitize_color([scalarfxn(i) * args[0][i] for i in range(4) ])
 
+# Color Scalar
 def specialsfxn(*args):
     scalar = int(len(set(('Many Sites','Fire sites','Air sites','Astral sites','Death sites','Nature sites', 'Blood sites', 'Holy sites',
         'Throne')).intersection(set(terrain.TextFromValue(args[2])))) > 0)
     scalarfxn = lambda k: scalar if k < 3 else 1
     return _sanitize_color([scalarfxn(i) * args[0][i] for i in range(4) ])
 
+# Path Filter based on Province number
+def connectsToThese(*args):
+    """ If a path connects to one of these places, I want it drawn - maybe they're starting locations and you want to see what they connect to"""
+    concerns = [112,154,176,162,208,22]
+    return any([xi in concerns for xi in args[0]])
+
 default = Profile()
 thrones = Profile(color_scale_transform = thronesfxn)
 starts = Profile(color_scale_transform = startonlyfxn)
 specials = Profile(color_scale_transform = specialsfxn)
-onlythrones = Profile(province_filter = thronesselection)
+onlythrones = Profile(province_filter = thronesselection) 
+specialconnection = Profile(path_filter = connectsToThese)
 
-__all__ = ['default','editor','specials','thrones','onlythrones']
+__all__ = ['default','editor','specials','thrones','onlythrones','specialconnection']

@@ -72,6 +72,7 @@ def ValueFromMask(mask):
 def MaskFromValue(number):
     """ Returns a mask from a given value """
     bitmask = [0 for x in range(27)]
+    number = int(number)
     for i in range(25,-1,-1):
         try:
             if(i == int(math.log(number,2))):
@@ -85,11 +86,12 @@ def MaskFromValue(number):
 def TextFromMask(mask):
     """ Returns a list of flags corresponding to a given mask """
     out = [terrainText[i] for i in range(1,len(mask)) if mask[i]==1]
+    if len(out)==0: out=[terrainText[0]]
     return out
 
 def TextFromValue(value):
     """ Returns a list of flags corresponding to a given value """
-    mask = MaskFromValue(value)
+    mask = MaskFromValue(int(value))
     out = TextFromMask(mask)
     return out
 
