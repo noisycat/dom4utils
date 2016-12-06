@@ -1,5 +1,48 @@
 import re, math
+from operator import itemgetter
 # needs to all be encapsulated to a Dom4Map class, but I ran out of time
+
+# Terrain codes - plains doesn't set any bit?
+# [BIT] [NUMBERVAL] [TEXTVAL]
+terrainData = (\
+('-',0,'Plains'), \
+('0',1,'Small Province'), \
+('1',2,'Large Province'), \
+('2',4,'Sea'), \
+('3',8,'Freshwater'), \
+('4',16,'Mountain'), \
+('5',32,'Swamp'), \
+('6',64,'Waste'), \
+('7',128,'Forest'), \
+('8',256,'Farm'), \
+('9',512,'Nostart'), \
+('10',1024,'Many Sites'), \
+('11',2048,'Deep Sea'), \
+('12',4096,'Cave'), \
+('13',8192,'Fire sites'), \
+('14',16384,'Air sites'), \
+('15',32768,'Water sites'), \
+('16',65536,'Earth sites'), \
+('17',131072,'Astral sites'), \
+('18',262144,'Death sites'), \
+('19',524288,'Nature sites'), \
+('20',1048576,'Blood sites'), \
+('21',2097152,'Holy sites'), \
+('22',4194304,'Border Mountain'), \
+('23',8388608,'Reserved for internal use'), \
+('24',16777216,'Throne'), \
+('25',33554432,'Start'))
+terrainValues = list(map(itemgetter(1), terrainData))
+terrainText = list(map(itemgetter(2), terrainData))
+terrainBit = list(map(itemgetter(0), terrainData))
+
+def terrainCode(flags):
+    values = sum([terrainValues[I] for I in [terrainText.index(flag) for flag
+        in flags]])
+
+def ListTerrainCodes():
+    for position, numvalue, textvalue in terrainData:
+        print("{0:>2s} {1:>9d} {2:s}".format(position, numvalue, textvalue))
 
 def rebuildMask(mask):
     number = 0
@@ -51,6 +94,7 @@ def interpretMask(mask):
 25,33554432,Start,'''.split(',')
     out = [myvals[3*i+2] for i in range(1,len(mask)) if mask[i]==1]
     return out
+
 def getBit(key):
     myvals = '''
 -,0,Plains,
@@ -112,6 +156,7 @@ def numProvinces(mapfiledata):
 
 def getConnections(mapfiledata):
     # build connectivity by type
+    # slower than it needs to be, could be done once and then sorted line by line?
     connections = dict()
     connections['all'] = set([(int(s[0]),int(s[1])) for s in re.findall("#neighbour (\S+) (\S+)",mapfiledata)])
     connections['river'] = set([(int(s[0]),int(s[1])) for s in re.findall("#neighbourspec (\S+) (\S+) 2",mapfiledata)])
@@ -122,3 +167,6 @@ def getConnections(mapfiledata):
     connections['amphibious'] = filter(lambda x: (checkType(x[0],'Sea',mapfiledata) or checkType(x[1],'Sea',mapfiledata)), connections['all'].difference(connections['aquatic'],connections['info-only']))
     connections['normal'] = connections['all'].difference(connections['river'],connections['mountain'],connections['aquatic'],connections['amphibious'],connections['info-only'])
     return connections
+
+
+__all__ = ["rebuildMask", "breakdown", "interpretMask", "getBit", "setType", "flipType", "checkType", "checkPeriodicNS", "checkPeriodicEW", "numProvinces", "getConnections"]
