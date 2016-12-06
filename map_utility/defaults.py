@@ -1,10 +1,10 @@
 # LICENSE CHOICE
 # dom4defaults - provides paths and dom4 specific information
+import sys
 try:
 	import dom4defaults as dom4
 except ImportError as e:
-	print(str(e))
-	print("Change the environment variable PYTHONPATH, didn't you? Do that and try again")
+	sys.stderr.write("Error: Change the environment variable $PYTHONPATH and try again\nbash:\n\texport PYTHONPATH=$PWD/common_settings:$PWD/common_utility:$PYTHONPATH\n")
 	raise e
 
 import defaultcolors as colors
