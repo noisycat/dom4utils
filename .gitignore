@@ -1,0 +1,5 @@
+# Compiled Object files
+*.pyc
+
+# Resulting images
+*.png
