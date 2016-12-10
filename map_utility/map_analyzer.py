@@ -126,12 +126,12 @@ except OSError as e:
 if args.debug: print "Map Image: ",mapimagepath
 
 try:
-    im = Image.open(os.path.join(maplocalfolder,mapimagefilename)).convert('RGBA')
+    im = Image.open(mapimagepath).convert('RGBA')
 
 except ValueError as e:
     print "PIL:",e
     print "Using Wand to get around this crap"
-    tmpim = wand.image.Image(filename=os.path.join(mapfolder,mapimagefilename))
+    tmpim = wand.image.Image(filename=mapimagepath)
     im = Image.open(io.BytesIO(tmpim.make_blob('TGA'))).convert('RGBA')
 
 except IOError:
