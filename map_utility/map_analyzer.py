@@ -21,6 +21,7 @@ python -i ./map_analyzer --color-normal-path 255 255 255 0 ~/dominion4/maps/hexa
 You can also edit the profiles.py and add in a custom profile for selection of which province numbers to print (see: province_filter), their colors (see: color_scale_transform ), and which specific paths to print (see: path_filter ), should you so desire. Feel free to try and hail me on Steam if you have ideas or requests. I'd really like to add in a graphics window that allows for selection of the whites_xy dots that determine the files, and allow you to do graphical insertion and removal, as well as radial auto connections. Commandline insertions are pretty easy to do, if those are good enough for now""")
 parser.add_argument('mappath',type=str,help='path/filename to the mapfile')
 parser.add_argument('--debug',action="store_true",default=False, help='enables some debug printing')
+parser.add_argument('--statsonly',action="store_true",default=False, help='only does textual analysis')
 parser.add_argument('--installpath',type=str,default=defaults.dom4.installpath[platform.system()],help='overrides the install path for dominions 4')
 parser.add_argument('--userpath',type=str,default=defaults.dom4.userpath[platform.system()],help='overrides the default userpath for dominions 4')
 parser.add_argument('--noshow',action="store_true",default=False,help='does not display the generated image')
@@ -103,7 +104,8 @@ with open(os.path.join(maplocalfolder,mapname)) as mapfile:
     mapfiledata = mapfile.read()
 
 # suck in map image
-mapimagefilename = re.findall(r'#imagefile (\S+)\s*$',mapfiledata,re.M)[0]
+mappropname = re.findall('^#dom2title (.*?)$',mapfiledata,re.DOTALL+re.MULTILINE)[0]
+mapimagefilename = re.findall('^#imagefile (\S+)\s*$',mapfiledata,re.M)[0]
 try:
     mapimagepath = os.path.join(maplocalfolder,mapimagefilename)
     stat = os.stat(mapimagepath)
@@ -165,175 +167,176 @@ isPeriodicNS = checkPeriodicNS(mapfiledata)
 isPeriodicEW = checkPeriodicEW(mapfiledata)
 connections = getConnections(mapfiledata)
 
-def periodic_translate(s,a1,a2,i,j):
-    return tuple(s + array(a1) * i + array(a2) * j)
+if not args.statsonly:
+    def periodic_translate(s,a1,a2,i,j):
+        return tuple(s + array(a1) * i + array(a2) * j)
 
-s = lambda t,i_s1,i_s2: tuple(array(array(i_s1,dtype=int) + t * (array(i_s2,dtype=int) - array(i_s1,dtype=int)),dtype=int))
+    s = lambda t,i_s1,i_s2: tuple(array(array(i_s1,dtype=int) + t * (array(i_s2,dtype=int) - array(i_s1,dtype=int)),dtype=int))
 
-def periodic(_s1,_s2,image_dimensions,isPeriodicNS=True,isPeriodicEW=True):
-    width = image_dimensions[0]
-    height = image_dimensions[1]
-    s1 = array(_s1)
-    s2 = array(_s2)
-
-
-    I = array([[width, 0],[0,height]])
-    if 2*(s1[0]-s2[0]) > width and 2*(s1[1]-s2[1]) > height:
-        if args.debug: print 1
-        return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
-
-    elif 2*(s1[0]-s2[0]) < -width and 2*(s1[1]-s2[1]) >  height:
-        s2m = periodic_translate(_s2,I[:,0],I[:,1],-1,1)
-        s1m = periodic_translate(_s1,I[:,0],I[:,1],1,-1)
-        tx = (0.0-s1[0])/(s2m[0]-s1[0])
-        ty = (0.0-s1m[1])/(s2[1]-s1m[1])
-        if args.debug: print tx,s(tx,s1,s2m),ty,s(ty,s1m,s2)
-        stx_o = periodic_translate(s(tx,s1,s2m),I[:,0],I[:,1],0,-1)
-        sty_o = periodic_translate(s(ty,s1m,s2),I[:,0],I[:,1],-1,0)
-        out = [[_s1,s(tx,s1,s2m)],[stx_o,sty_o],[periodic_translate(stx_o,I[:,0],I[:,1],1,0),_s2]]
-        if args.debug: print 2, tx,ty, out
-        return out
+    def periodic(_s1,_s2,image_dimensions,isPeriodicNS=True,isPeriodicEW=True):
+        width = image_dimensions[0]
+        height = image_dimensions[1]
+        s1 = array(_s1)
+        s2 = array(_s2)
 
 
-    elif 2*(s1[0]-s2[0]) >  width and 2*(s1[1]-s2[1]) < -height:
-        if args.debug: print 3
-        return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
+        I = array([[width, 0],[0,height]])
+        if 2*(s1[0]-s2[0]) > width and 2*(s1[1]-s2[1]) > height:
+            if args.debug: print 1
+            return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
 
-    elif 2*(s1[0]-s2[0]) < -width and 2*(s1[1]-s2[1]) < -height:
-        s2m = periodic_translate(_s2,I[:,0],I[:,1],-1,-1)
-        tx = (0.0-s1[0])/(s2m[0]-s1[0])
-        ty = (0.0-s1[1])/(s2m[1]-s1[1])
-        if args.debug: print tx,s(tx,s1,s2m),ty,s(ty,s1,s2m)
-        stx_o = periodic_translate(s(tx,s1,s2m),I[:,0],I[:,1],1,0)
-        sty_o = periodic_translate(s(ty,s1,s2m),I[:,0],I[:,1],1,0)
-        out = [[_s1,s(tx,s1,s2m)],[stx_o,sty_o],[periodic_translate(sty_o,I[:,0],I[:,1],0,1),_s2]]
-        if args.debug: print 4, tx,ty,s2m, out
-        return out
+        elif 2*(s1[0]-s2[0]) < -width and 2*(s1[1]-s2[1]) >  height:
+            s2m = periodic_translate(_s2,I[:,0],I[:,1],-1,1)
+            s1m = periodic_translate(_s1,I[:,0],I[:,1],1,-1)
+            tx = (0.0-s1[0])/(s2m[0]-s1[0])
+            ty = (0.0-s1m[1])/(s2[1]-s1m[1])
+            if args.debug: print tx,s(tx,s1,s2m),ty,s(ty,s1m,s2)
+            stx_o = periodic_translate(s(tx,s1,s2m),I[:,0],I[:,1],0,-1)
+            sty_o = periodic_translate(s(ty,s1m,s2),I[:,0],I[:,1],-1,0)
+            out = [[_s1,s(tx,s1,s2m)],[stx_o,sty_o],[periodic_translate(stx_o,I[:,0],I[:,1],1,0),_s2]]
+            if args.debug: print 2, tx,ty, out
+            return out
 
-    elif 2*(s1[0]-s2[0]) > width:
-        return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
 
-    elif 2*(_s1[0]-_s2[0]) < -width:
-        s2m = periodic_translate(_s2,I[:,0],I[:,1],-1,0)
-        tx = (0.0-_s1[0])/(s2m[0]-_s1[0])
-        out = [[_s1,s(tx,_s1,s2m)],[periodic_translate(s(tx,_s1,s2m),I[:,0],I[:,1],1,0),_s2]]
-        return out
+        elif 2*(s1[0]-s2[0]) >  width and 2*(s1[1]-s2[1]) < -height:
+            if args.debug: print 3
+            return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
 
-    elif 2*(_s1[1]-_s2[1]) >  height:
-        return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
+        elif 2*(s1[0]-s2[0]) < -width and 2*(s1[1]-s2[1]) < -height:
+            s2m = periodic_translate(_s2,I[:,0],I[:,1],-1,-1)
+            tx = (0.0-s1[0])/(s2m[0]-s1[0])
+            ty = (0.0-s1[1])/(s2m[1]-s1[1])
+            if args.debug: print tx,s(tx,s1,s2m),ty,s(ty,s1,s2m)
+            stx_o = periodic_translate(s(tx,s1,s2m),I[:,0],I[:,1],1,0)
+            sty_o = periodic_translate(s(ty,s1,s2m),I[:,0],I[:,1],1,0)
+            out = [[_s1,s(tx,s1,s2m)],[stx_o,sty_o],[periodic_translate(sty_o,I[:,0],I[:,1],0,1),_s2]]
+            if args.debug: print 4, tx,ty,s2m, out
+            return out
 
-    elif 2*(_s1[1]-_s2[1]) < -height:
-        s2m = periodic_translate(_s2,I[:,0],I[:,1],0,-1)
-        ty = (0.0-_s1[1])/(s2m[1]-_s1[1])
-        out = [[_s1,s(ty,_s1,s2m)],[periodic_translate(s(ty,_s1,s2m),I[:,0],I[:,1],0,1),_s2]]
-        return out 
+        elif 2*(s1[0]-s2[0]) > width:
+            return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
 
-    else:
-        return [[_s1,_s2],]
+        elif 2*(_s1[0]-_s2[0]) < -width:
+            s2m = periodic_translate(_s2,I[:,0],I[:,1],-1,0)
+            tx = (0.0-_s1[0])/(s2m[0]-_s1[0])
+            out = [[_s1,s(tx,_s1,s2m)],[periodic_translate(s(tx,_s1,s2m),I[:,0],I[:,1],1,0),_s2]]
+            return out
 
-def line(ij,j=0):
-    try:              return (whites_xy[ij-1],whites_xy[j-1])
-    except TypeError: return (whites_xy[ij[0]-1],whites_xy[ij[1]-1])
+        elif 2*(_s1[1]-_s2[1]) >  height:
+            return periodic(_s2,_s1,image_dimensions,isPeriodicNS,isPeriodicEW)
 
-tmpim = Image.new('RGBA',(im.width,im.height),(0,0,0,0))
-draw = ImageDraw.Draw(tmpim,mode='RGBA')
+        elif 2*(_s1[1]-_s2[1]) < -height:
+            s2m = periodic_translate(_s2,I[:,0],I[:,1],0,-1)
+            ty = (0.0-_s1[1])/(s2m[1]-_s1[1])
+            out = [[_s1,s(ty,_s1,s2m)],[periodic_translate(s(ty,_s1,s2m),I[:,0],I[:,1],0,1),_s2]]
+            return out 
+
+        else:
+            return [[_s1,_s2],]
+
+    def line(ij,j=0):
+        try:              return (whites_xy[ij-1],whites_xy[j-1])
+        except TypeError: return (whites_xy[ij[0]-1],whites_xy[ij[1]-1])
+
+    tmpim = Image.new('RGBA',(im.width,im.height),(0,0,0,0))
+    draw = ImageDraw.Draw(tmpim,mode='RGBA')
 
 # custom colors for rendering
-color = dict()
-color['mountain'] = args.color_mountain_path
-color['river'] = args.color_river_path
-color['aquatic'] = args.color_aquatic_path
-color['amphibious'] = args.color_amphibious_path
-color['normal'] = args.color_normal_path
-color['info-only'] = args.color_info_only_path
+    color = dict()
+    color['mountain'] = args.color_mountain_path
+    color['river'] = args.color_river_path
+    color['aquatic'] = args.color_aquatic_path
+    color['amphibious'] = args.color_amphibious_path
+    color['normal'] = args.color_normal_path
+    color['info-only'] = args.color_info_only_path
 
-def drawConnection(drawObj, segs, color,width=6):
-    if len(segs)==1: 
-        drawObj.line(segs[0],fill=color,width=6)
-    if len(segs)==2: 
-        drawObj.line(segs[0],fill=color,width=6)
-        drawObj.line(segs[1],fill=color,width=6)
-    if len(segs)==3: 
-        drawObj.line(segs[0],fill=color,width=6)
-        drawObj.line(segs[1],fill=color,width=6)
-        drawObj.line(segs[2],fill=color,width=6)
+    def drawConnection(drawObj, segs, color,width=6):
+        if len(segs)==1: 
+            drawObj.line(segs[0],fill=color,width=6)
+        if len(segs)==2: 
+            drawObj.line(segs[0],fill=color,width=6)
+            drawObj.line(segs[1],fill=color,width=6)
+        if len(segs)==3: 
+            drawObj.line(segs[0],fill=color,width=6)
+            drawObj.line(segs[1],fill=color,width=6)
+            drawObj.line(segs[2],fill=color,width=6)
 
 # load a font
-fontsize = max(im.width,im.height)/75 if args.fontsize_province_number <= 0 else args.fontsize_province_number
+    fontsize = max(im.width,im.height)/75 if args.fontsize_province_number <= 0 else args.fontsize_province_number
 
-fnt = ImageFont.truetype(args.fontface,fontsize)
+    fnt = ImageFont.truetype(args.fontface,fontsize)
 
-import random
+    import random
 # NO MORE RANDOM NUMBERS PAST THIS 
-random.seed(2718)
+    random.seed(2718)
 
-""" Example section of taking a map, turning off some throne locations, turning
-on some caves, turning off the thrones that were already on"""
-if 0:
-    #changes to map data
-    for k in range(1,len(whites_xy)+1):
-        #if checkType(k,'Throne',mapfiledata): mapfiledata = flipType(k,'Throne',mapfiledata)
+    """ Example section of taking a map, turning off some throne locations, turning
+    on some caves, turning off the thrones that were already on"""
+    if 0:
+        #changes to map data
+        for k in range(1,len(whites_xy)+1):
+            #if checkType(k,'Throne',mapfiledata): mapfiledata = flipType(k,'Throne',mapfiledata)
 
-        #new caves
-        if (k in [6, 149, 151]): mapfiledata = setType(k,'Cave',True)
+            #new caves
+            if (k in [6, 149, 151]): mapfiledata = setType(k,'Cave',True)
 
-        # new manual thrones
-        if (k in [114,92,63,32,88]) or (k in [124,85,39,23,123]): mapfiledata = setType(k,'Start',True)
+            # new manual thrones
+            if (k in [114,92,63,32,88]) or (k in [124,85,39,23,123]): mapfiledata = setType(k,'Start',True)
 
-        # turning off these thrones
-        if (k in [1,77,93,37,3]): mapfiledata = setType(k,'Throne',False)
+            # turning off these thrones
+            if (k in [1,77,93,37,3]): mapfiledata = setType(k,'Throne',False)
 
 #select out territories
-def numLandConnections(k,connectors): return len(filter(lambda xx: k in xx, connectors))
-def checkNeighbors(k,flag,connectors,mapfiledata): 
-    return any([checkType(x,flag,mapfiledata) for x in itertools.chain.from_iterable(filter(lambda xx: k in xx, connectors))])
+    def numLandConnections(k,connectors): return len(filter(lambda xx: k in xx, connectors))
+    def checkNeighbors(k,flag,connectors,mapfiledata): 
+        return any([checkType(x,flag,mapfiledata) for x in itertools.chain.from_iterable(filter(lambda xx: k in xx, connectors))])
 
-ratios = map(lambda x: 1 if 4 <= numLandConnections(x,connections['normal'].union(connections['river'],connections['mountain'])) and not checkType(x,'Nostart',mapfiledata) else 0, range(1,len(whites_xy)+1))
+    ratios = map(lambda x: 1 if 4 <= numLandConnections(x,connections['normal'].union(connections['river'],connections['mountain'])) and not checkType(x,'Nostart',mapfiledata) else 0, range(1,len(whites_xy)+1))
 #ratios = map(lambda x: 1 if 4 <= numLandConnections(x,connections['normal'].union(connections['river'],connections['mountain'])) and not checkType(x,'Nostart',mapfiledata) and not checkNeighbors(x,'Throne',connections['normal'].union(connections['river'],connections['mountain'])) else 0, range(1,len(terrain_types)+1))
 
 # draw connections based on input
-if args.connection_types == 'all':
-    keys = ('normal','mountain','river','aquatic','amphibious','info-only')
-elif args.connection_types == 'passable':
-    keys = ('normal','mountain','river','aquatic','amphibious')
-else:
-    keys = [args.connection_types]
+    if args.connection_types == 'all':
+        keys = ('normal','mountain','river','aquatic','amphibious','info-only')
+    elif args.connection_types == 'passable':
+        keys = ('normal','mountain','river','aquatic','amphibious')
+    else:
+        keys = [args.connection_types]
 
-for key in keys:
-    for x in connections[key]:
-        decision_inputs = (x,line(x),(im.width,im.height),isPeriodicNS,isPeriodicEW)
-        displayThisPath = eval("profiles."+args.profile).path_filter(*decision_inputs)
-        if displayThisPath: 
-            segs = periodic(line(x)[0],line(x)[1],(im.width,im.height),isPeriodicNS,isPeriodicEW)
-            # for seg in segs: print sum((array(seg[0])-array(seg[1]))**2)
-            # the above will allow for separate line behavior based on segment length
-            # unfortunately a custom line style will need to be made, and thats not 
-            # happening yet
-            drawConnection(draw,segs,color[key])
+    for key in keys:
+        for x in connections[key]:
+            decision_inputs = (x,line(x),(im.width,im.height),isPeriodicNS,isPeriodicEW)
+            displayThisPath = eval("profiles."+args.profile).path_filter(*decision_inputs)
+            if displayThisPath: 
+                segs = periodic(line(x)[0],line(x)[1],(im.width,im.height),isPeriodicNS,isPeriodicEW)
+                # for seg in segs: print sum((array(seg[0])-array(seg[1]))**2)
+                # the above will allow for separate line behavior based on segment length
+                # unfortunately a custom line style will need to be made, and thats not 
+                # happening yet
+                drawConnection(draw,segs,color[key])
 
 # label all points
-for k,xy in zip(range(1,len(whites_xy)+1),whites_xy):
-    xymod = (xy[0] - fontsize * (xy[0] > im.width - fontsize),xy[1] - fontsize * (xy[1] > im.height-fontsize))
-    decision_inputs = (args.color_province_number, k, provinceValue(k,mapfiledata), xy)
-    displayThisLabel = eval("profiles."+args.profile).province_filter(*decision_inputs)
-    if displayThisLabel:
-        useFill = eval("profiles."+args.profile).color_scale_transform(*decision_inputs)
-        draw.text(xymod,str(k),font=fnt,fill=useFill)
+    for k,xy in zip(range(1,len(whites_xy)+1),whites_xy):
+        xymod = (xy[0] - fontsize * (xy[0] > im.width - fontsize),xy[1] - fontsize * (xy[1] > im.height-fontsize))
+        decision_inputs = (args.color_province_number, k, provinceValue(k,mapfiledata), xy)
+        displayThisLabel = eval("profiles."+args.profile).province_filter(*decision_inputs)
+        if displayThisLabel:
+            useFill = eval("profiles."+args.profile).color_scale_transform(*decision_inputs)
+            draw.text(xymod,str(k),font=fnt,fill=useFill)
 
 
 # form export images
 
 # offset is the original image with appropriate offsets
-composite = Image.alpha_composite(im,tmpim)
-offset = ImageChops.offset(composite,args.offset_x,args.offset_y)
+    composite = Image.alpha_composite(im,tmpim)
+    offset = ImageChops.offset(composite,args.offset_x,args.offset_y)
 
 # test is reduced image 
-test = offset.resize((im.width/args.image_reduce,im.height/args.image_reduce),Image.NEAREST)
-if not args.noshow: offset.show()
-if args.saveas == defaults.outfile:
-    test.save(eval(defaults.outfile))
-else:
-    test.save(args.saveas)
+    test = offset.resize((im.width/args.image_reduce,im.height/args.image_reduce),Image.NEAREST)
+    if not args.noshow: offset.show()
+    if args.saveas == defaults.outfile:
+        test.save(eval(defaults.outfile))
+    else:
+        test.save(args.saveas)
 
 # textual analysis 
 final_province_types = [MaskFromValue(provinceValue(prov,mapfiledata)) for prov in range(1,len(whites_xy)+1)]
@@ -341,9 +344,11 @@ results = sum(array(final_province_types),axis=0)
 results[0] = list(sum(array(final_province_types),axis=1)).count(0)
 numsea = results[terrainText.index('Sea')]
 numland = len(whites_xy)-numsea
-
-print("\n========= Stats ({0:3d} / {1:3d})=========".format(numland,numsea))
+coltotal = 40 
+print("\n={0:{1:d}s}{2:s}".format(mapname,len(mapname),"="*(coltotal-len(mapname)-1)))
+print("==={2:23s} ({0:3d} / {1:3d})==".format(numland,numsea,mappropname))
+print("="* coltotal)
 print("{1:>4s} {2:>5s}   {0:s}".format('Type', '#', '%'))
-print("====================================")
+print("="* coltotal)
 for key, result in zip(terrainText, results):
     print("{1:4d} {2:5.2f}% {0:s}".format(key, result, result*100.0/len(whites_xy)))
