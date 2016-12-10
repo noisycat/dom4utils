@@ -9,8 +9,8 @@ except ImportError as e:
 
 import defaultcolors as colors
 
-font = {'Darwin':'Ariel.ttf',
-'Windows':'Ariel.ttf',
+font = {'Darwin':'Arial.ttf',
+'Windows':'Arial.ttf',
 'Linux':'/usr/share/fonts/liberation/LiberationSans-Regular.ttf'} # maybe this works? maybe it doesn't. rage
 
 outfile = "mapname+'_connections.png'"
