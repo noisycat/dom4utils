@@ -90,7 +90,7 @@ print "0.4.2" >= WAND_VERSION
 try:
     fnt = ImageFont.truetype(args.fontface,40)
 except Exception as e:
-    print("Bad font given - try a different font (give a full file name if you have to)")
+    print("Bad font given ( {0:s} )- try a different font (give a full file name if you have to)".format(args.fontface))
     raise e
 
 
@@ -103,8 +103,7 @@ with open(os.path.join(maplocalfolder,mapname)) as mapfile:
     mapfiledata = mapfile.read()
 
 # suck in map image
-mapfiledata = re.sub(r'#dom2title (.+)$',r'#dom2title "\1 Competitive"$',mapfiledata)
-mapimagefilename = re.findall(r'#imagefile (\S+)$',mapfiledata,re.M)[0]
+mapimagefilename = re.findall(r'#imagefile (\S+)\s*$',mapfiledata,re.M)[0]
 try:
     mapimagepath = os.path.join(maplocalfolder,mapimagefilename)
     stat = os.stat(mapimagepath)
@@ -151,8 +150,13 @@ data = im.getdata()
 
 # find the white xy
 size = im.getbbox()
-im.width = size[2]
-im.height = size[3]
+try:
+    im.width = size[2]
+    im.height = size[3]
+except:
+    # this failed because the attributes are already set
+    pass
+
 whites_xy = [(x,y) for y in reversed(range(0,im.height)) for x in range(0,im.width) if data.getpixel((x,y)) == (255,255,255,255) or data.getpixel((x,y)) == (255,255,255)]
 
 # whites_xy[k] is the k province xy
