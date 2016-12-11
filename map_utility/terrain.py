@@ -115,7 +115,10 @@ def flipType(terrainNum,terrainKey,mapfiledata):
 
 def provinceValue(terrainNum, mapfiledata):
     results = re.findall("#terrain {0} (\S+)".format(terrainNum),mapfiledata)
-    return results[0]
+    try:
+        return results[0]
+    except Exception as e:
+        print terrainNum, e
 
 def checkType(terrainNum,terrainKey,mapfiledata):
     results = re.findall("#terrain {0} (\S+)".format(terrainNum),mapfiledata)

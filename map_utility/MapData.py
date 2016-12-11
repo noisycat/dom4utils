@@ -262,7 +262,7 @@ class MapData:
             # link the prov_specials to the territory number since that's how they're processed
             filelike.write("""\n\n--""")
         else:
-            pass
+            filelike.write(self.maptextdata)
 
     def seeCenters(self):
         for province in self.province:
@@ -460,9 +460,14 @@ def __txtdiff(lines1,lines2):
 if __name__ == '__main__':
     print("Testing MapData.py")
     M = open(os.path.expanduser('~/dominions4/maps/hexawyr.map'))
-    import sys
-    #M.Export(sys.stdout)
+    with fopen(os.path.expanduser('~/dominions4/maps/hexawyr_copy.map'),'w') as outfile:
+        M.Export(outfile,new=False)
+    with fopen(os.path.expanduser('~/dominions4/maps/hexawyr_copy2.map'),'w') as outfile:
+        M.Export(outfile)
     M.removeProvince(Province(10,-1))
+    with fopen(os.path.expanduser('~/dominions4/maps/hexawyr_no10.map'),'w') as outfile:
+        M.Export(outfile,new=False)
+
     '''
     txt = M.maptextdata
     k = M.update('province_nbr',10,11)
