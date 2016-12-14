@@ -118,6 +118,7 @@ for tag in [('lab',tuple()),
     _valid_lines[tag[0]] = _template_line(tag[0],tag[1])
     _special_lines[tag[0]] = _valid_lines[tag[0]]
 
+# province-special
 for tag in [('land','province_nbr'),
         ('setland','province_nbr'),
         ('poptype','poptype_nbr'),
@@ -132,6 +133,28 @@ for tag in [('land','province_nbr'),
         ('owner','nation_nbr')]:
     _valid_lines[tag[0]] = _template_line(tag[0],tag[1])
     _special_lines[tag[0]] = _valid_lines[tag[0]]
+
+# province-commander-special
+for tag in [('commander','entireline'),
+        ('comname','entireline'),
+        ('bodyguards','nbr','entireline'),
+        ('units','nbr','entireline'),
+        ('xp','nbr'),
+        ('randomequip','rich_nbr'),
+        ('additem','entireline'),
+        ('clearmagic',()),
+        ('mag_fire','level_nbr'),
+        ('mag_air','level_nbr'),
+        ('mag_water','level_nbr'),
+        ('mag_earth','level_nbr'),
+        ('mag_astral','level_nbr'),
+        ('mag_death','level_nbr'),
+        ('mag_nature','level_nbr'),
+        ('mag_blood','level_nbr'),
+        ('mag_priest','level_nbr')]:
+    _valid_lines[tag[0]] = _template_line(tag[0],tag[1])
+    _special_lines[tag[0]] = _valid_lines[tag[0]]
+# god-special
 
 _valid_lines['groundcol'] = _template_line('groundcol',*tuple(3*('color_nbr',)))
 _valid_lines['rockcol'] = _template_line('rockcol',*tuple(3*('color_nbr',)))

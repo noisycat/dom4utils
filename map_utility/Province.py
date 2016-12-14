@@ -8,6 +8,7 @@ class Province:
         self.nextid = idnum if not nextid else nextid
         # duplicate, takes up a lot of memory
         self.neighbours = list()
+        self.specials = dict()
 
     def __str__(self):
         return "Province {:d}".format(self.idnum)
