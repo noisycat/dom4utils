@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from PIL import Image, ImageFont, ImageChops
 
 def new():
     pass
@@ -17,8 +18,11 @@ class MapImage():
         except:
             pass
 
+        self.convert = im.convert
+
     def getCenters(self):
-        self.whites_xy = [(x,y) for y in reversed(range(0,im.height)) for x in range(0,im.width) if data.getpixel((x,y)) == (255,255,255,255) or data.getpixel((x,y)) == (255,255,255)]
+        self.whites_xy = [(x,y) for y in reversed(range(0,self.im.height)) for x in range(0,self.im.width) if data.getpixel((x,y)) == (255,255,255,255) or data.getpixel((x,y)) == (255,255,255)]
+        self.whites_xy.sort(key=lambda x, y: (self.im.width - x) + y * self.im.width)
         return self.whites_xy
 
     def resize(widthin, heightin):
@@ -28,5 +32,4 @@ class MapImage():
     def save(filename, mode=None):
         pass
 
-    convert = im.convert
     
