@@ -1,6 +1,6 @@
 # dom4utils
 
-Tools for working with Dominions 4.
+suite of Tools for working with Dominions 4.
 
 ##WHAT:
 
@@ -23,6 +23,18 @@ Allows you to have access to all the data in the dom4modinspector through python
 ---
 
 ##INSTALLATION REQUIREMENTS
+
+###Goal: Crossplatform support for Windows, Linux, Mac OS X
+
+###Dependencies:
+
+1) Python >= 2.6 (https://www.python.org/)
+2) ImageMagick (https://www.imagemagick.org/)
+3) pillow (https://www.python-pillow.org/)
+4) wand (http://docs.wand-py.org/)
+5) Dominions 4 csv data - see https://github.com/larzm42/dominions-tools or the modinspector. This requirement is likely to change
+
+###Use:
 
 Still very manual approach - to use this without installing it, just prepend PYTHONPATH with this directory location, as well as the location of dom4inspector
 
