@@ -55,6 +55,19 @@ def thronesselection(*args):
     return bool('Throne' in terrain.TextFromValue(args[2]) )
 
 # Color Scalar
+def startsthronesfxn(*args):
+    start = ('Start' in terrain.TextFromValue(args[2]) ) 
+    throne = ('Throne' in terrain.TextFromValue(args[2]) )
+    scalar = int(start or throne)
+    scalarfxn = lambda k: scalar if k < 3 else 1
+    if start:
+        return _sanitize_color([scalarfxn(i) * args[0][i] for i in (0,1,2,3)])
+    elif throne:
+        return _sanitize_color([scalarfxn(i) * args[0][i] for i in (1,0,2,3)])
+    else:
+        return _sanitize_color([scalarfxn(i) * args[0][i] for i in (0,1,2,3)])
+
+# Color Scalar
 def thronesfxn(*args):
     scalar = int(bool('Throne' in terrain.TextFromValue(args[2]) ))
     scalarfxn = lambda k: scalar if k < 3 else 1
@@ -79,11 +92,19 @@ def connectsToThese(*args):
     concerns = [112,154,176,162,208,22]
     return any([xi in concerns for xi in args[0]])
 
+def availablestart(*args):
+    return (args[-1] >= 1)
+
 default = Profile()
 thrones = Profile(color_scale_transform = thronesfxn)
 starts = Profile(color_scale_transform = startonlyfxn)
+startsthrones = Profile(color_scale_transform = startsthronesfxn,
+        province_filter = availablestart)
 specials = Profile(color_scale_transform = specialsfxn)
 onlythrones = Profile(province_filter = thronesselection) 
 specialconnection = Profile(path_filter = connectsToThese)
 
-__all__ = ['default','editor','specials','thrones','onlythrones','specialconnection']
+__all__ = ['default','editor', 
+        'specials','thrones', 
+        'onlythrones','startsthrones',
+        'specialconnection']

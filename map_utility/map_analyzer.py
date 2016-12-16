@@ -41,6 +41,10 @@ parser.add_argument('--color-aquatic-path', nargs=4, type=int, default=defaults.
 parser.add_argument('--color-amphibious-path', nargs=4, type=int, default=defaults.colors.amphibious, help='color choice for amphibious paths',choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-normal-path', nargs=4, type=int, default=defaults.colors.normal, help='color choice for normal paths',choices=range(256), metavar='0 .. 255')
 parser.add_argument('--color-info-only-path', nargs=4, type=int, default=defaults.colors.info_only, help='color choice for info_only paths',choices=range(256), metavar='0 .. 255')
+parser.add_argument('--makestarts', nargs='+', type=int, default=list(),
+        help='turns these provinces into start locations')
+parser.add_argument('--makethrones', nargs='+', type=int, default=list(),
+        help='turns these provinces into throne locations')
 args = parser.parse_args()
 # these can be replaced with an Action at some point - but I'm not interested in doing that right now
 args.color_mountain_path = tuple(args.color_mountain_path)
@@ -100,6 +104,7 @@ user_maps=os.path.join(args.userpath,'maps')
 dominions_maps=os.path.join(args.installpath,'maps')
 maplocalfolder=os.path.dirname(args.mappath)
 mapname = os.path.basename(args.mappath)
+mapfilewrite = 'tmp_'+mapname
 with open(os.path.join(maplocalfolder,mapname)) as mapfile:
     mapfiledata = mapfile.read()
 
@@ -241,6 +246,24 @@ if not args.statsonly:
     tmpim = Image.new('RGBA',(im.width,im.height),(0,0,0,0))
     draw = ImageDraw.Draw(tmpim,mode='RGBA')
 
+    if len(args.makestarts)+len(args.makethrones) > 0:
+        with open(mapfilewrite,'w') as outfile:
+            #changes to map data
+            for k in range(1,len(whites_xy)+1):
+                #if checkType(k,'Throne',mapfiledata): mapfiledata = flipType(k,'Throne',mapfiledata)
+
+                #new manual caves 
+                #if (k in [6, 149, 151]): mapfiledata = setType(k,'Cave',True)
+
+                # new manual starts
+                if (k in args.makestarts): mapfiledata = setType(k, 
+                        'Start',True, mapfiledata)
+
+                # new manual thrones
+                if (k in args.makethrones): mapfiledata = setType(k,
+                            'Throne',True, mapfiledata)
+            outfile.write(mapfiledata)
+
 # custom colors for rendering
     color = dict()
     color['mountain'] = args.color_mountain_path
@@ -263,33 +286,16 @@ if not args.statsonly:
 
 # load a font
     fontsize = max(im.width,im.height)/75 if args.fontsize_province_number <= 0 else args.fontsize_province_number
-
     fnt = ImageFont.truetype(args.fontface,fontsize)
-
-    import random
-# NO MORE RANDOM NUMBERS PAST THIS 
-    random.seed(2718)
-
-    """ Example section of taking a map, turning off some throne locations, turning
-    on some caves, turning off the thrones that were already on"""
-    if 0:
-        #changes to map data
-        for k in range(1,len(whites_xy)+1):
-            #if checkType(k,'Throne',mapfiledata): mapfiledata = flipType(k,'Throne',mapfiledata)
-
-            #new caves
-            if (k in [6, 149, 151]): mapfiledata = setType(k,'Cave',True)
-
-            # new manual thrones
-            if (k in [114,92,63,32,88]) or (k in [124,85,39,23,123]): mapfiledata = setType(k,'Start',True)
-
-            # turning off these thrones
-            if (k in [1,77,93,37,3]): mapfiledata = setType(k,'Throne',False)
 
 #select out territories
     def numLandConnections(k,connectors): return len(filter(lambda xx: k in xx, connectors))
     def checkNeighbors(k,flag,connectors,mapfiledata): 
         return any([checkType(x,flag,mapfiledata) for x in itertools.chain.from_iterable(filter(lambda xx: k in xx, connectors))])
+
+    """ Example section of taking a map, turning off some throne locations, turning
+    on some caves, turning off the thrones that were already on"""
+
 
     ratios = map(lambda x: 1 if 4 <= numLandConnections(x,connections['normal'].union(connections['river'],connections['mountain'])) and not checkType(x,'Nostart',mapfiledata) else 0, range(1,len(whites_xy)+1))
 #ratios = map(lambda x: 1 if 4 <= numLandConnections(x,connections['normal'].union(connections['river'],connections['mountain'])) and not checkType(x,'Nostart',mapfiledata) and not checkNeighbors(x,'Throne',connections['normal'].union(connections['river'],connections['mountain'])) else 0, range(1,len(terrain_types)+1))
@@ -317,7 +323,10 @@ if not args.statsonly:
 # label all points
     for k,xy in zip(range(1,len(whites_xy)+1),whites_xy):
         xymod = (xy[0] - fontsize * (xy[0] > im.width - fontsize),xy[1] - fontsize * (xy[1] > im.height-fontsize))
-        decision_inputs = (args.color_province_number, k, provinceValue(k,mapfiledata), xy)
+        decision_inputs = (args.color_province_number, k,
+                provinceValue(k,mapfiledata), xy,
+                numLandConnections(k,connections['normal'].union(
+                    connections['river'],connections['mountain']) ) )
         displayThisLabel = eval("profiles."+args.profile).province_filter(*decision_inputs)
         if displayThisLabel:
             useFill = eval("profiles."+args.profile).color_scale_transform(*decision_inputs)
@@ -337,6 +346,7 @@ if not args.statsonly:
         test.save(eval(defaults.outfile))
     else:
         test.save(args.saveas)
+
 
 # textual analysis 
 final_province_types = [MaskFromValue(provinceValue(prov,mapfiledata)) for prov in range(1,len(whites_xy)+1)]
