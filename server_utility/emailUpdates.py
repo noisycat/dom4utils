@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # standard modules
-import argparse, os, csv, re, itertools
+import sys
+sys.settrace
+import argparse, os, csv, re
 # personalized modules
 try:
     import mySMTP 
@@ -20,7 +22,6 @@ def newServer():
     '''
     raise e
 
-from email.mime.text import MIMEText
 
 class statuspage:
     def unsubmitted(self):
@@ -44,7 +45,7 @@ class statuspage:
                 self.text = file_.read()
         except Exception as e:
             print str(e)
-        self.rawparse = re.findall(r'<td class="\S+">(.*)</td>',self.text,re.MULTILINE) 	
+        self.rawparse = re.findall(r'<td class="\S+">(.*)</td>',self.text,re.MULTILINE)   
         self.status = [x for x in zip(self.rawparse[0:len(self.rawparse):2],self.rawparse[1:len(self.rawparse):2])]
         self.turn = self.currentTurn()
         self.gamename = self.gameName()
@@ -54,108 +55,65 @@ if __name__ == '__main__':
     parse.add_argument("player_list",help="full path to tab separated file of <side> | <email>\nsuch that player_list:<side> <--> statuspage:<side>")
     parse.add_argument("statuspage",help="full path to standard status page output from Dominions4 server")
     parse.add_argument("--action",help="""newturn - email players about the new turn\n
-chastise last player to move
-remind all players who haven't moved
-globalchastise the last player to move""",choices=['newturn','chastise','remind','globalchastise'],default='chastise')
+chastise - last player to move
+remind - all players who haven't moved
+finalturn""",choices=['newturn','chastise','remind','finalturn'],default='chastise')
     parse.add_argument("--limiter",help="How many times to chastise people a given turn",type=int,default=3)
     parse.add_argument("--debug",help="for active development work",type=int,default=0)
-    #parsed = parse.parse_args("--action chastise /home/pi/dominions4/savedgames/taislitterbox/playerlist.txt /var/www/index.html".split())
     parsed = parse.parse_args()
 
-    # eat the player_list
+    print parsed
+
+    # eat the player_list data
     with open(parsed.player_list,'r') as player_list_file:
-        player_lookup = dict(list(csv.reader(player_list_file,delimiter='\t')))
+        player_list_filedata = list(csv.reader(player_list_file,delimiter='\t'))
+
+    # eat the player_list data
+    player_lookup = {x[0]:x[1] for x in player_list_filedata if x[1] !=
+    'None'}
 
     # eat status page
     curstatuspage = statuspage(parsed.statuspage)
 
     # optional eat insults
-
     try:
         with open(os.path.join(os.path.dirname(curstatuspage.path),curstatuspage.gamename),'r') as tracking_file:
             notifications = list(csv.reader(tracking_file,delimiter='\t'))
     except:
         notifications = list()
-    
-    if parsed.action=='chastise':
-        unsubmitted = curstatuspage.unsubmitted()
-        if len(unsubmitted)==1:
-            msg = MIMEText("You're the only one who hasn't played your turn!")
-            msg['Subject'] = '[AUTOMATED] %s - STOP HAVING A LIFE AND PLAY YOUR DOMINIONS TURN' % (curstatuspage.gamename)
-            msg['From']=mySMTP.sender
-            msg['To']=player_lookup[unsubmitted[0][0]]
-            msg['CC']=mySMTP.sender
-            if notifications.count([curstatuspage.turn,msg['To']]) < parsed.limiter:
-                try:
-                    server = mySMTP.newServer()
-                    if parsed.debug: server.sendmail(mySMTP.sender, [mySMTP.sender], msg.as_string())
-                    else: server.sendmail(mySMTP.sender, [msg['To']], msg.as_string())
-                finally:
-                    server.quit()
 
-                notifications.append([curstatuspage.turn,msg['To']])
-                with open(os.path.join(os.path.dirname(curstatuspage.path),curstatuspage.gamename),'w') as tracking_file:
-                    trackwriter = csv.writer(tracking_file,delimiter='\t')
-                    trackwriter.writerows(notifications)
+    from email.mime.text import MIMEText
 
-    elif parsed.action=='globalchastise':
-        unsubmitted = curstatuspage.unsubmitted()
-        if len(unsubmitted)==1:
-            msg = MIMEText("You're the only one who hasn't played your turn!")
-            msg['Subject'] = '[AUTOMATED] %s - STOP HAVING A LIFE AND PLAY YOUR DOMINIONS TURN' % (curstatuspage.gamename)
-            msg['From']=mySMTP.sender
-            msg['To']=player_lookup[unsubmitted[0][0]]
-            msg['CC']=mySMTP.sender
-            if notifications.count([curstatuspage.turn,msg['To']]) < parsed.limiter:
-                try:
-                    server = mySMTP.newServer()
-                    server.sendmail(mySMTP.sender, list(player_lookup.values()), msg.as_string())
-                finally:
-                    server.quit()
-
-                notifications.append([curstatuspage.turn,msg['To']])
-                with open(os.path.join(os.path.dirname(curstatuspage.path),curstatuspage.gamename),'w') as tracking_file:
-                    trackwriter = csv.writer(tracking_file,delimiter='\t')
-                    trackwriter.writerows(notifications)
-
-    elif parsed.action=='newturn':
-        msg = MIMEText("The seasons have passed - a new turn dawns!")
-        msg['Subject']="[AUTOMATED] %s - New Turn (%d)" % (curstatuspage.gamename,int(curstatuspage.turn)+1)
-        msg['From']=mySMTP.sender
-        msg['To']=",".join([player_lookup[nation] for nation in curstatuspage.remainingNations()])
-        try:
-            server = mySMTP.newServer()
-            if parsed.debug: 
-                print mySMTP.sender, [msg['To']], msg.as_string()
-                server.sendmail(mySMTP.sender, [mySMTP.sender], msg.as_string())
-            else: server.sendmail(mySMTP.sender, [player_lookup[nation] for nation in curstatuspage.remainingNations()], msg.as_string())
-        finally:
-            server.quit()
-
-    elif parsed.action=='finalturn':
-        msg = MIMEText("The seasons have passed for a final time. A new God-king rises!")
-        msg['Subject']="[AUTOMATED] %s - End (%d)" % (curstatuspage.gamename,int(curstatuspage.turn))
-        msg['From']=mySMTP.sender
-        msg['To']=",".join(player_lookup.values())
+    def send_email(subject, text, recipients):
+        if (len(recipients)== 0): 
+            print("\nNo recipients!")
+            return
+        msg = MIMEText("{0:s}".format(_text))
+        msg['Subject'] = subject
+        msg['From']    = mySMTP.sender
         try:
             server = mySMTP.newServer()
             if parsed.debug: server.sendmail(mySMTP.sender, [mySMTP.sender], msg.as_string())
-            else: server.sendmail(mySMTP.sender, list(player_lookup.values()), msg.as_string())
+            else: server.sendmail(mySMTP.sender, recipients, msg.as_string())
         finally:
             server.quit()
 
-    elif parsed.action=='remind':
-        unsubmitted = curstatuspage.unsubmitted()
-        msg = MIMEText("This is a friendly reminder that you need to play your Dominions 4 turn:" + ("\n%s"*len(unsubmitted)) % (tuple(x[0] for x in unsubmitted)))
-        msg['Subject']="[AUTOMATED] %s - Reminder - Turn (%s)" % (curstatuspage.gamename,curstatuspage.turn)
-        msg['From']=mySMTP.sender
-        msg['To']=",".join([player_lookup[x[0]] for x in unsubmitted])
-        try:
-            server = mySMTP.newServer()
-            if parsed.debug:
-                print mySMTP.sender, [msg['To']], msg.as_string()
-                server.sendmail(mySMTP.sender, [mySMTP.sender], msg.as_string())
-            else: server.sendmail(mySMTP.sender, [player_lookup[x[0]] for x in unsubmitted], msg.as_string())
-        finally:
-            server.quit()
+    unsubmitted = [y for y in set(map(lambda x: player_lookup.get(x[0],'None'),
+        curstatuspage.unsubmitted())) if y != 'None']
 
+    allplayers = [y for y in set(map(lambda x: player_lookup.get(x[0],'None'),
+        curstatuspage.status)) if y != 'None']
+
+
+    def actionfxn(*args):
+        header = '[AUTO][DOM4] {gamename:s} {turn:s} - '.format(gamename= 
+                curstatuspage.gamename, turn= curstatuspage.turn) 
+        return {'Subject':header+args[0], 'Body':args[1], 'Recipients':args[2]}
+
+    actionmap = {
+            'chastise':(len(unsubmitted) == 1, actionfxn("Holdup", "You're the only one who hasn't played your turn!", unsubmitted)),
+            'newturn':(True, actionfxn("New Turn", "The seasons have passed - a new turn dawns!", allplayers)),
+            'remind':(True, actionfxn("Reminder", "This is a friendly reminder that you need to play your Dominions 4 turn:", unsubmitted)),
+            'finalturn':(True, actionfxn("Final Turn", "The seasons have passed for a final time. A new God-king rises!", allplayers)) }
+
+    if actionmap[parsed.action][0]: send_email(actionmap[parsed.action][1])
