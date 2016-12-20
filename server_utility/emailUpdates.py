@@ -88,9 +88,10 @@ finalturn""",choices=['newturn','chastise','remind','finalturn'],default='chasti
         if (len(recipients)== 0): 
             print("\nNo recipients!")
             return
-        msg = MIMEText("{0:s}".format(_text))
+        msg = MIMEText("{0:s}".format(text))
         msg['Subject'] = subject
         msg['From']    = mySMTP.sender
+        #msg['To']    = ''
         try:
             server = mySMTP.newServer()
             if parsed.debug: server.sendmail(mySMTP.sender, [mySMTP.sender], msg.as_string())
@@ -108,7 +109,7 @@ finalturn""",choices=['newturn','chastise','remind','finalturn'],default='chasti
     def actionfxn(*args):
         header = '[AUTO][DOM4] {gamename:s} {turn:s} - '.format(gamename= 
                 curstatuspage.gamename, turn= curstatuspage.turn) 
-        return {'Subject':header+args[0], 'Body':args[1], 'Recipients':args[2]}
+        return {'subject':header+args[0], 'text':args[1], 'recipients':args[2]}
 
     actionmap = {
             'chastise':(len(unsubmitted) == 1, actionfxn("Holdup", "You're the only one who hasn't played your turn!", unsubmitted)),
@@ -116,4 +117,4 @@ finalturn""",choices=['newturn','chastise','remind','finalturn'],default='chasti
             'remind':(True, actionfxn("Reminder", "This is a friendly reminder that you need to play your Dominions 4 turn:", unsubmitted)),
             'finalturn':(True, actionfxn("Final Turn", "The seasons have passed for a final time. A new God-king rises!", allplayers)) }
 
-    if actionmap[parsed.action][0]: send_email(actionmap[parsed.action][1])
+    if actionmap[parsed.action][0]: send_email(**actionmap[parsed.action][1])
